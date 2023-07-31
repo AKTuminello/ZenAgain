@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BlobBreathing from '../components/BlobBreathing';
+import { globalStyles } from '../assets/globalStyles'; 
 
 const HomeScreen = ({ navigation }) => {
   const handleGoToFunStuff = () => {
@@ -9,41 +10,11 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to ZenAgain</Text>
-
+    <View style={globalStyles.container}>
+      <Text style={globalStyles.title}>Welcome to ZenAgain</Text>
       <BlobBreathing />
-
-      </View>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  funStuffButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  funStuffButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
-});
 
 export default HomeScreen;

@@ -8,7 +8,7 @@ const BlobBreathing = () => {
 
   const interpolateColor = animatedColor.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgb(255,0,0)', 'rgb(0,0,255)']
+    outputRange: ['rgb(255,170,160)', 'rgb(181,210,255)']
   });
 
   const startBreathing = () => {
@@ -98,6 +98,13 @@ const styles = {
     width: 100,
     height: 100,
     borderRadius: 50,
+    borderWidth: 2,
+    borderColor: 'darkgrey',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,  
+    elevation: 5,
   },
   innerContainer: {
     justifyContent: 'center',

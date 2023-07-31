@@ -1,0 +1,10 @@
+Color palate
+
+A99f97 cocoa
+E2dcd7 pearl
+ccc4be ash
+c9d9cb mint
+dee9dc ice
+d4b8ad sand (red)
+
+bdd5cd seafoam(blue)

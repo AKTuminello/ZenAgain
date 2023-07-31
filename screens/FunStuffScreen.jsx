@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, Modal, Image } from 'react-native';
 import { Audio } from 'expo-av';
-import { FAB, Portal } from 'react-native-paper';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { FAB } from 'react-native-paper';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { FloatingAction } from "react-native-floating-action";
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
@@ -11,7 +12,7 @@ const FunStuffScreen = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [blendsMenu, setBlendsMenu] = useState([]);
   const [isMusicOn, setIsMusicOn] = useState(false);
-  const [isFabOpen, setIsFabOpen] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetchBlendsFromFirestore();
@@ -66,38 +67,14 @@ const FunStuffScreen = () => {
       await playAudio(blendData.audioUrl);
     }
     setSelectedBlend(blendData);
+    setModalVisible(true);
   };  
-
-  useEffect(() => {
-    return () => {
-      // this will run when the component is unmounted
-      setIsFabOpen(false);
-    };
-  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
         <FAB icon={isMusicOn ? "music" : "music-off"} onPress={toggleMusic} style={styles.fab} />
         <Text style={styles.header}>I want to feel more...</Text>
-        <Portal>
-          <FAB.Group
-            open={isFabOpen}
-            icon={isFabOpen ? 'close' : 'plus'}
-            actions={blendsMenu.map((blend) => ({
-              icon: 'playlist-play', // replace with an icon
-              label: blend.name,
-              onPress: () => handleBlendSelection(blend),
-            }))}
-            onStateChange={({ open }) => setIsFabOpen(open)}
-            onPress={() => {
-              if (isFabOpen) {
-                // do something if the FAB is open
-              }
-            }}
-            style={styles.fab}
-          />
-        </Portal>
       </View>
 
       {selectedBlend && (
@@ -106,6 +83,34 @@ const FunStuffScreen = () => {
           <Image source={{ uri: selectedBlend.imageUrl }} style={styles.image} />
         </View>
       )}
+
+      <FloatingAction
+        actions={blendsMenu.map((blend) => ({
+          text: blend.name,
+          name: blend.id.toString(),
+        }))}
+        onPressItem={name => {
+          const blend = blendsMenu.find(blend => blend.id.toString() === name);
+          handleBlendSelection(blend);
+        }}
+      />
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={isModalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        {selectedBlend && (
+          <View style={styles.centeredView}>
+            <Text style={styles.modalText}>{selectedBlend.name}</Text>
+            <Text style={styles.modalText}>{selectedBlend.description}</Text>
+            <Text style={styles.modalText}>{selectedBlend.ingredients}</Text>
+            <FAB icon="close" onPress={() => setModalVisible(false)} style={styles.closeButton} />
+          </View>
+        )}
+      </Modal>
+
     </View>
   );
 };
@@ -143,6 +148,22 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     resizeMode: 'cover',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 24,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
   },
 });
 
