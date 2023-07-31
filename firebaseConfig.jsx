@@ -1,22 +1,13 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
-import {
-  REACT_NATIVE_API_KEY,
-  REACT_NATIVE_AUTH_DOMAIN,
-  REACT_NATIVE_PROJECT_ID,
-  REACT_NATIVE_STORAGE_BUCKET,
-  REACT_NATIVE_MESSAGING_SENDER_ID,
-  REACT_NATIVE_APP_ID,
-} from '@env';
-
 const firebaseConfig = {
-  apiKey: REACT_NATIVE_API_KEY,
-  authDomain: REACT_NATIVE_AUTH_DOMAIN,
-  projectId: REACT_NATIVE_PROJECT_ID,
-  storageBucket: REACT_NATIVE_STORAGE_BUCKET,
-  messagingSenderId: REACT_NATIVE_MESSAGING_SENDER_ID,
-  appId: REACT_NATIVE_APP_ID,
+  apiKey: process.env.REACT_NATIVE_API_KEY,
+  authDomain: process.env.REACT_NATIVE_AUTH_DOMAIN,
+  projectId: process.env.REACT_NATIVE_PROJECT_ID,
+  storageBucket: process.env.REACT_NATIVE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_NATIVE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_NATIVE_APP_ID,
 };
 
 let app;

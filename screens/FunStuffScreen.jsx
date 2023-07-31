@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Audio } from 'expo-av';
 import { FAB, Portal } from 'react-native-paper';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { db } from '../firebaseConfig';
 
 
 

@@ -10,27 +10,23 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Home Screen!</Text>
+      <Text style={styles.title}>Welcome to ZenAgain</Text>
 
       <BlobBreathing />
 
-      <TouchableOpacity style={styles.funStuffButton} onPress={handleGoToFunStuff}>
-        <Ionicons name="happy-outline" size={24} color="white" />
-        <Text style={styles.funStuffButtonText}>I'm okay right now, take me to the fun stuff</Text>
-      </TouchableOpacity>
-    </View>
+      </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 20,
   },
