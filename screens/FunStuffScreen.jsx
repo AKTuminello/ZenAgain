@@ -5,8 +5,6 @@ import { FAB, Portal } from 'react-native-paper';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
-
-
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
   const [audio, setAudio] = useState(null);
@@ -70,37 +68,44 @@ const FunStuffScreen = () => {
     setSelectedBlend(blendData);
   };  
 
+  useEffect(() => {
+    return () => {
+      // this will run when the component is unmounted
+      setIsFabOpen(false);
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <FAB icon={isMusicOn ? "music" : "music-off"} onPress={toggleMusic} style={styles.fab} />
+        <Text style={styles.header}>I want to feel more...</Text>
+        <Portal>
+          <FAB.Group
+            open={isFabOpen}
+            icon={isFabOpen ? 'close' : 'plus'}
+            actions={blendsMenu.map((blend) => ({
+              icon: 'playlist-play', // replace with an icon
+              label: blend.name,
+              onPress: () => handleBlendSelection(blend),
+            }))}
+            onStateChange={({ open }) => setIsFabOpen(open)}
+            onPress={() => {
+              if (isFabOpen) {
+                // do something if the FAB is open
+              }
+            }}
+            style={styles.fab}
+          />
+        </Portal>
+      </View>
+
       {selectedBlend && (
         <View style={styles.selectedBlendContainer}>
           <Text style={styles.selectedBlendText}>{selectedBlend.text}</Text>
           <Image source={{ uri: selectedBlend.imageUrl }} style={styles.image} />
         </View>
       )}
-  
-      <View style={styles.bottomBar}>
-        <FAB icon={isMusicOn ? "music" : "music-off"} onPress={toggleMusic} style={styles.fab} />
-        <Text style={styles.header}>I want to feel more...</Text>
-      </View>
-  
-      <Portal>
-        <FAB.Group
-          open={isFabOpen}
-          icon={isFabOpen ? 'close' : 'plus'}
-          actions={blendsMenu.map((blend) => ({
-            icon: 'playlist-play', // replace with an icon
-            label: blend.name,
-            onPress: () => handleBlendSelection(blend),
-          }))}
-          onStateChange={({ open }) => setIsFabOpen(open)}
-          onPress={() => {
-            if (isFabOpen) {
-              // do something if the FAB is open
-            }
-          }}
-        />
-      </Portal>
     </View>
   );
 };
@@ -108,15 +113,15 @@ const FunStuffScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     backgroundColor: '#f0f0f0',
-    paddingBottom: 10,
+    padding: 10,
   },
-  bottomBar: {
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   fab: {
     marginHorizontal: 10,
@@ -126,8 +131,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   selectedBlendContainer: {
-    marginTop: 20,
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   selectedBlendText: {
     fontSize: 18,
@@ -141,3 +147,4 @@ const styles = StyleSheet.create({
 });
 
 export default FunStuffScreen;
+
