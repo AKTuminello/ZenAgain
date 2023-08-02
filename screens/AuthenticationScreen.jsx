@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
+import { View, StyleSheet, TextInput, Text, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from '@firebase/firestore';
@@ -10,7 +10,6 @@ const AuthenticationScreen = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
   const authContext = useContext(AuthContext);
   const navigation = useNavigation();
 
@@ -31,10 +30,9 @@ const AuthenticationScreen = () => {
         navigation.navigate('User');
       }
     } catch (error) {
-      setError(error.message);
+      Alert.alert('Error', error.message);
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -58,7 +56,6 @@ const AuthenticationScreen = () => {
       <Button onPress={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Need to create an account?' : 'Already have an account?'}
       </Button>
-      {error && <Text>{error}</Text>}
     </View>
   );
 };
