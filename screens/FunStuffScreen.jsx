@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, Image } from 'react-native';
-import { Audio } from 'expo-av';
-import { FAB } from 'react-native-paper';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import { FloatingAction } from "react-native-floating-action";
+import MusicPlayer from '../components/MusicPlayer';
+import BlendMenu from '../components/BlendMenu';
+import { FAB, Portal, Provider, Appbar } from 'react-native-paper';
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
-  const [audio, setAudio] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [blendsMenu, setBlendsMenu] = useState([]);
+  const [blends, setBlends] = useState([]);
   const [isMusicOn, setIsMusicOn] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -22,38 +20,9 @@ const FunStuffScreen = () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'OilBlends'));
       const blends = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setBlendsMenu(blends);
+      setBlends(blends);
     } catch (error) {
       console.error('Error fetching blends:', error);
-    }
-  };
-
-  const toggleMusic = async () => {
-    if (isMusicOn) {
-      await stopAudio();
-    } else {
-      if (selectedBlend?.audioUrl) {
-        await playAudio(selectedBlend.audioUrl);
-      }
-    }
-    setIsMusicOn(!isMusicOn);
-  };
-
-  const playAudio = async (fileUrl) => {
-    try {
-      const { sound } = await Audio.Sound.createAsync({ uri: fileUrl });
-      setAudio(sound);
-      await sound.playAsync();
-      setIsPlaying(true);
-    } catch (error) {
-      console.error('Error playing audio:', error);
-    }
-  };
-
-  const stopAudio = async () => {
-    if (audio) {
-      await audio.stopAsync();
-      setIsPlaying(false);
     }
   };
 
@@ -62,20 +31,16 @@ const FunStuffScreen = () => {
       return;
     }
   
-    await stopAudio();
-    if (blendData.audioUrl && isMusicOn) {
-      await playAudio(blendData.audioUrl);
-    }
     setSelectedBlend(blendData);
     setModalVisible(true);
   };  
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
-        <FAB icon={isMusicOn ? "music" : "music-off"} onPress={toggleMusic} style={styles.fab} />
-        <Text style={styles.header}>I want to feel more...</Text>
-      </View>
+      <Appbar.Header>
+        <Appbar.Content title="I want to feel more..." />
+        <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
+      </Appbar.Header>
 
       {selectedBlend && (
         <View style={styles.selectedBlendContainer}>
@@ -84,16 +49,7 @@ const FunStuffScreen = () => {
         </View>
       )}
 
-      <FloatingAction
-        actions={blendsMenu.map((blend) => ({
-          text: blend.name,
-          name: blend.id.toString(),
-        }))}
-        onPressItem={name => {
-          const blend = blendsMenu.find(blend => blend.id.toString() === name);
-          handleBlendSelection(blend);
-        }}
-      />
+      <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
       <Modal
         animationType="slide"
@@ -168,4 +124,3 @@ const styles = StyleSheet.create({
 });
 
 export default FunStuffScreen;
-

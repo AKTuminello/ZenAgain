@@ -1,10 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, TextInput, Text, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
+import { View, StyleSheet, Alert } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from '@firebase/firestore';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from '@react-navigation/native';
+
+import AuthInput from '../components/AuthInput';
+import AuthButton from '../components/AuthButton';
 
 const AuthenticationScreen = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,26 +39,27 @@ const AuthenticationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
+      <Appbar.Header>
+        <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
+      </Appbar.Header>
+      <AuthInput
         value={email}
         onChangeText={(text) => setEmail(text)}
         placeholder="Email"
         autoCapitalize="none"
       />
-      <TextInput
-        style={styles.input}
+      <AuthInput
         value={password}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
         secureTextEntry
       />
-      <Button onPress={handleAuth}>
+      <AuthButton onPress={handleAuth}>
         {isLogin ? 'Login' : 'Create Account'}
-      </Button>
-      <Button onPress={() => setIsLogin(!isLogin)}>
+      </AuthButton>
+      <AuthButton onPress={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Need to create an account?' : 'Already have an account?'}
-      </Button>
+      </AuthButton>
     </View>
   );
 };
@@ -65,13 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingLeft: 8,
+    paddingTop: 50,
   },
 });
 
