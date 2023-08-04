@@ -11,9 +11,11 @@ const FunStuffScreen = () => {
   const [blends, setBlends] = useState([]);
   const [isMusicOn, setIsMusicOn] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [funImages, setFunImages] = useState([]);
 
   useEffect(() => {
     fetchBlendsFromFirestore();
+    fetchFunStuffImagesFromFirestore();
   }, []);
 
   const fetchBlendsFromFirestore = async () => {
@@ -23,6 +25,33 @@ const FunStuffScreen = () => {
       setBlends(blends);
     } catch (error) {
       console.error('Error fetching blends:', error);
+    }
+  };
+
+  const fetchFunStuffImagesFromFirestore = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'users'));
+      const users = querySnapshot.docs.map(doc => doc.data());
+      const images = [];
+
+      users.forEach(user => {
+        if (user.profilePic_displayinUserGallery) {
+          images.push(user.profilePic);
+        }
+        if (user.favePic1_displayInFunStuff) {
+          images.push(user.favePic1);
+        }
+        if (user.favePic2_displayInFunStuff) {
+          images.push(user.favePic2);
+        }
+        if (user.favePic3_displayInFunStuff) {
+          images.push(user.favePic3);
+        }
+      });
+
+      setFunImages(images);
+    } catch (error) {
+      console.error('Error fetching fun stuff images:', error);
     }
   };
 
@@ -41,6 +70,10 @@ const FunStuffScreen = () => {
         <Appbar.Content title="I want to feel more..." />
         <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
       </Appbar.Header>
+
+      {funImages.map((imageUrl, index) => (
+        <Image key={index} source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} />
+      ))}
 
       {selectedBlend && (
         <View style={styles.selectedBlendContainer}>

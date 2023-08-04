@@ -1,4 +1,4 @@
-import * as ImagePicker from 'expo-image-picker';
+import * as Camera from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
 import { updateDoc, doc } from '@firebase/firestore';
@@ -15,8 +15,8 @@ const uriToBlob = async (uri) => {
 };
 
 export const handleImageSelection = async (user, imageNumber) => {
-  let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.All,
+  let result = await Camera.launchImageLibraryAsync({
+    mediaTypes: Camera.MediaTypeOptions.All,
     allowsEditing: true,
     aspect: [4, 3],
     quality: 1,
