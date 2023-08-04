@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { TextInput, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 
-const AuthInput = ({ value, onChangeText, placeholder, secureTextEntry = false, autoCapitalize = "sentences" }) => {
+const AuthInput = forwardRef(({ value, setValue, placeholder, secureTextEntry = false, onSubmitEditing = null }, ref) => {
   return (
     <TextInput
       style={styles.input}
       value={value}
-      onChangeText={onChangeText}
+      onChangeText={setValue}
       placeholder={placeholder}
-      autoCapitalize={autoCapitalize}
       secureTextEntry={secureTextEntry}
+      onSubmitEditing={onSubmitEditing}
+      autoCapitalize="none"
+      returnKeyType="next"
+      blurOnSubmit={false}
+      ref={ref}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   input: {
@@ -21,7 +26,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
-    paddingTop: 50,
+    color: 'black',
   },
 });
 

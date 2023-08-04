@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 
-const AuthButton = ({ onPress, children }) => {
+const AuthButton = ({ onPress, title }) => {
   return (
     <Button onPress={onPress}>
-      {children}
+      {title}
     </Button>
   );
 };

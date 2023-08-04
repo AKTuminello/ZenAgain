@@ -1,18 +1,29 @@
-import React from 'react';
-import { FloatingAction } from 'react-native-floating-action';
+import React, { useState } from 'react';
+import { Button, Menu, Paragraph } from 'react-native-paper';
 
 const BlendMenu = ({ blends, handleBlendSelection }) => {
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
   return (
-    <FloatingAction
-      actions={blends.map((blend) => ({
-        text: blend.name,
-        name: blend.id.toString(),
-      }))}
-      onPressItem={name => {
-        const blend = blends.find(blend => blend.id.toString() === name);
-        handleBlendSelection(blend);
-      }}
-    />
+    <Menu
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={<Button onPress={openMenu}>Select a blend</Button>}
+    >
+      {blends.map((blend) => (
+        <Menu.Item
+          key={blend.id.toString()}
+          onPress={() => {
+            handleBlendSelection(blend);
+            closeMenu();
+          }}
+          title={blend.name}
+        />
+      ))}
+    </Menu>
   );
 };
 

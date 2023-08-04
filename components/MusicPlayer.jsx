@@ -4,18 +4,26 @@ import { FAB } from 'react-native-paper';
 
 const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
   const [audio, setAudio] = useState(null);
-  
+
   useEffect(() => {
-    if (isMusicOn) {
-      if (fileUrl) {
-        playAudio(fileUrl);
-      } else {
-        setIsMusicOn(false);
-      }
+    if (fileUrl) {
+      playAudio(fileUrl);
     } else {
       stopAudio();
     }
-  }, [fileUrl, isMusicOn]);
+  }, [fileUrl]);
+
+  useEffect(() => {
+    if (isMusicOn) {
+      if (audio) {
+        audio.playAsync();
+      }
+    } else {
+      if (audio) {
+        audio.pauseAsync();
+      }
+    }
+  }, [isMusicOn]);
 
   const toggleMusic = async () => {
     if (!fileUrl) {
@@ -26,6 +34,9 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
 
   const playAudio = async (fileUrl) => {
     try {
+      // Stop and unload any previously playing audio.
+      await stopAudio();
+
       const { sound } = await Audio.Sound.createAsync({ uri: fileUrl });
       setAudio(sound);
       await sound.playAsync();
@@ -37,6 +48,8 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
   const stopAudio = async () => {
     if (audio) {
       await audio.stopAsync();
+      await audio.unloadAsync();
+      setAudio(null);
     }
   };
 

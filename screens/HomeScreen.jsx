@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import BlobBreathing from '../components/BlobBreathing';
 import { globalStyles } from '../assets/globalStyles'; 
 
@@ -11,7 +11,9 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={globalStyles.container}>
-      <Text style={globalStyles.title}>Welcome to ZenAgain</Text>
+      <Appbar.Header>
+        <Appbar.Content title="Welcome to ZenAgain" />
+      </Appbar.Header>
       <BlobBreathing />
     </View>
   );
