@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Alert, Text, ScrollView, Image, TextInput, TouchableOpacity, Modal, Switch } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Swiper from 'react-native-swiper';
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth, signOut } from '@firebase/auth';
@@ -12,6 +13,22 @@ import { globalStyles } from '../assets/globalStyles';
 import { Appbar } from 'react-native-paper';
 import LogoutButton from '../components/UserScreenComponents/LogoutButton';
 import { onSnapshot } from '@firebase/firestore';
+
+import HomeScreen from './HomeScreen';
+import UserGallery from './UserGalleryScreen';
+import FunStuffScreen from './FunStuffScreen';
+
+const Stack = createStackNavigator();
+
+const UserScreenStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="User" component={UserScreen} />
+    <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Screen name="UserGallery" component={UserGallery} />
+    <Stack.Screen name="FunStuff" component={FunStuffScreen} />
+  </Stack.Navigator>
+);
+
 
 const UserScreen = () => {
   const auth = getAuth();
@@ -375,5 +392,6 @@ const UserScreen = () => {
     </ScrollView>
   );
 };
+
 
 export default UserScreen;

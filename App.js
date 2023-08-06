@@ -12,6 +12,7 @@ import HomeScreen from './screens/HomeScreen';
 import AuthenticationScreen from './screens/AuthenticationScreen';
 import TestSwiperScreen from './screens/TestSwiperScreen';
 import UserScreen from './screens/UserScreen';
+import UserGalleryScreen from './screens/UserGalleryScreen'; // make sure this import is correct
 
 const MainTab = createMaterialBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -30,14 +31,26 @@ const SignInNavigator = () => {
   );
 };
 
-const MainNavigator = () => (
+const UserNavigator = () => (
   <MainTab.Navigator>
     <MainTab.Screen name="Home" component={HomeScreen} />
     <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
-    <MainTab.Screen name="Sign In" component={SignInNavigator} />
-    <MainTab.Screen name="TestSwiper" component={TestSwiperScreen} />
+    <MainTab.Screen name="My Stuff" component={UserScreen} />
+    <MainTab.Screen name="User Gallery" component={UserGalleryScreen} />
   </MainTab.Navigator>
 );
+
+const MainNavigator = () => {
+  const { user } = useContext(AuthContext);
+
+  return user ? <UserNavigator /> : (
+    <MainTab.Navigator>
+      <MainTab.Screen name="Home" component={HomeScreen} />
+      <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
+      <MainTab.Screen name="Sign In" component={SignInNavigator} />
+    </MainTab.Navigator>
+  );
+};
 
 const theme = {
   ...DefaultTheme,
