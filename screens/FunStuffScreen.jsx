@@ -23,41 +23,49 @@ const FunStuffScreen = () => {
   }, []);
 
   const fetchBlendsFromFirestore = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'OilBlends'));
-      const blends = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setBlends(blends);
-    } catch (error) {
-      console.error('Error fetching blends:', error);
-    }
+    const querySnapshot = await getDocs(collection(db, 'OilBlends'));
+    const blends = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setBlends(blends);
   };
 
   const fetchFunStuffImagesFromFirestore = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'users'));
-      const users = querySnapshot.docs.map(doc => doc.data());
-      const images = [];
-
-      users.forEach(user => {
-        if (user.profilePic_displayInFunStuff) {
-          images.push(user.profilePic);
-        }
-        if (user.favePic1_displayInFunStuff) {
-          images.push(user.favePic1);
-        }
-        if (user.favePic2_displayInFunStuff) {
-          images.push(user.favePic2);
-        }
-        if (user.favePic3_displayInFunStuff) {
-          images.push(user.favePic3);
-        }
-      });
-
-      setFunImages(images);
-      setSwiperImages(images); // Initial images for the swiper
-    } catch (error) {
-      console.error('Error fetching fun stuff images:', error);
-    }
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    const users = querySnapshot.docs.map(doc => doc.data());
+    const images = [];
+  
+    users.forEach(user => {
+      if (user.profilePic_displayInFunStuff) {
+        images.push({ 
+          url: user.profilePic, 
+          text: user.profilePic_text, 
+          nickname: user.nickname 
+        });
+      }
+      if (user.favePic1_displayInFunStuff) {
+        images.push({ 
+          url: user.favePic1, 
+          text: user.myfavoriteimage_text, 
+          nickname: user.nickname 
+        });
+      }
+      if (user.favePic2_displayInFunStuff) {
+        images.push({ 
+          url: user.favePic2, 
+          text: user.mysecondfavorite_text, 
+          nickname: user.nickname 
+        });
+      }
+      if (user.favePic3_displayInFunStuff) {
+        images.push({ 
+          url: user.favePic3, 
+          text: user.mythirdfavorite_text, 
+          nickname: user.nickname 
+        });
+      }
+    });
+  
+    setFunImages(images);
+    setSwiperImages(images); // Initial images for the swiper
   };
 
   const handleBlendSelection = async (blendData) => {
@@ -67,19 +75,24 @@ const FunStuffScreen = () => {
   
     setSelectedBlend(blendData);
     setModalVisible(true);
-    setSwiperImages(prevImages => [...prevImages, blendData.imageUrl]);
-  };  
-
   
-  const handleCloseImage = () => {
-    setFullScreenImage(null);
-  }
+    // Add blend information to the swiper
+    setSwiperImages(prevImages => [...prevImages, {
+      url: blendData.imageUrl,
+      nickname: blendData.name,
+      text: blendData.description
+    }]);
+  };
   const handleImagePress = (imageUrl) => {
-    //this should handle issues between swiping and pressing
     setTimeout(() => {
       setFullScreenImage(imageUrl);
     }, 200);
   };
+  
+
+  const handleCloseImage = () => {
+    setFullScreenImage(null);
+  }
 
   return (
     <View style={styles.container}>
@@ -89,9 +102,15 @@ const FunStuffScreen = () => {
       </Appbar.Header>
 
       <Swiper autoplay={true} showsPagination={false} showsButtons={true} style={{ backgroundColor: '#CCC4be' }}>
-        {swiperImages.map((imageUrl, index) => (
-          <TouchableOpacity key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} onPress={() => handleImagePress(imageUrl)}>
-            <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
+        {swiperImages.map((image, index) => (
+          <TouchableOpacity 
+            key={index} 
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} 
+            onPress={() => handleImagePress(image.url)}
+          >
+            <Text>{image.nickname}</Text>
+            <Image source={{ uri: image.url }} style={{ width: 200, height: 200 }} />
+            <Text>{image.text}</Text>
           </TouchableOpacity>
         ))}
       </Swiper>
