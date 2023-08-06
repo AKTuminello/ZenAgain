@@ -3,16 +3,11 @@ import { StyleSheet } from 'react-native';
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DAE8DA',
-    textColor: '#532915',
+    backgroundColor: '#DAE8DA', // The background color you mentioned
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    fontFamily: 'normal',
+  text: {
+    color: '#A99F97',  // The coffee color
   },
-
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -49,6 +44,17 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  carouselItemContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  carouselItemImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+  },
   
-  // Add more global styles here...
+  
 });

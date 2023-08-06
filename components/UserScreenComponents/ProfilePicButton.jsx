@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 
-const ProfilePicButton = ({ handleChooseImage }) => {
+const ProfilePicButton = ({ handleProfilePicSelection }) => {
   return (
-    <Button onPress={handleChooseImage} mode="contained" style={{ marginVertical: 10 }}>
+    <Button onPress={handleProfilePicSelection} mode="contained" style={{ marginVertical: 10 }}>
       Choose Profile Picture
     </Button>
   );

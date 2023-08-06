@@ -4,8 +4,8 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { getFirestore, doc, setDoc } from '@firebase/firestore';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import AuthInput from '../components/AuthInput';
-import AuthButton from '../components/AuthButton';
+import AuthInput from '../components/AuthenticationScreenComponents/AuthInput';
+import AuthButton from '../components/AuthenticationScreenComponents/AuthButton';
 import { Appbar } from 'react-native-paper';
 import { globalStyles } from '../assets/globalStyles';
 

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, Image } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import MusicPlayer from '../components/MusicPlayer';
-import BlendMenu from '../components/BlendMenu';
+import MusicPlayer from '../components/FunStuffScreenComponents/MusicPlayer';
+import BlendMenu from '../components/FunStuffScreenComponents/BlendMenu';
 import { FAB, Portal, Provider, Appbar } from 'react-native-paper';
 
 const FunStuffScreen = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import BlobBreathing from '../components/BlobBreathing';
+import BlobBreathing from '../components/HomeScreenComponents/BlobBreathing';
 import { globalStyles } from '../assets/globalStyles'; 
 
 const HomeScreen = ({ navigation }) => {

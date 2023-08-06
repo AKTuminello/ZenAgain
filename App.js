@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -10,7 +10,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import FunStuffScreen from './screens/FunStuffScreen';
 import HomeScreen from './screens/HomeScreen';
 import AuthenticationScreen from './screens/AuthenticationScreen';
-import TestScreen from './screens/TestScreen';
+import TestSwiperScreen from './screens/TestSwiperScreen';
 import UserScreen from './screens/UserScreen';
 
 const MainTab = createMaterialBottomTabNavigator();
@@ -35,8 +35,19 @@ const MainNavigator = () => (
     <MainTab.Screen name="Home" component={HomeScreen} />
     <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
     <MainTab.Screen name="Sign In" component={SignInNavigator} />
+    <MainTab.Screen name="TestSwiper" component={TestSwiperScreen} />
   </MainTab.Navigator>
 );
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#A99F97',  // the coffee color
+    accent: '#E2DCD7',  // the pearl color
+    // add other colors if needed
+  },
+};
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -70,7 +81,7 @@ const App = () => {
 
 export default () => {
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <AuthProvider>
         <App />
       </AuthProvider>
