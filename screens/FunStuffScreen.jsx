@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, Image } from 'react-native';
+import { View, Text, StyleSheet, Modal, Image, TouchableOpacity } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import MusicPlayer from '../components/FunStuffScreenComponents/MusicPlayer';
 import BlendMenu from '../components/FunStuffScreenComponents/BlendMenu';
 import { FAB, Portal, Provider, Appbar } from 'react-native-paper';
+import Swiper from 'react-native-swiper';
+import { globalStyles } from '../assets/globalStyles';
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
@@ -12,6 +14,8 @@ const FunStuffScreen = () => {
   const [isMusicOn, setIsMusicOn] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [funImages, setFunImages] = useState([]);
+  const [swiperImages, setSwiperImages] = useState([]);
+  const [fullScreenImage, setFullScreenImage] = useState(null);
 
   useEffect(() => {
     fetchBlendsFromFirestore();
@@ -35,7 +39,7 @@ const FunStuffScreen = () => {
       const images = [];
 
       users.forEach(user => {
-        if (user.profilePic_displayinUserGallery) {
+        if (user.profilePic_displayInFunStuff) {
           images.push(user.profilePic);
         }
         if (user.favePic1_displayInFunStuff) {
@@ -50,6 +54,7 @@ const FunStuffScreen = () => {
       });
 
       setFunImages(images);
+      setSwiperImages(images); // Initial images for the swiper
     } catch (error) {
       console.error('Error fetching fun stuff images:', error);
     }
@@ -62,7 +67,19 @@ const FunStuffScreen = () => {
   
     setSelectedBlend(blendData);
     setModalVisible(true);
+    setSwiperImages(prevImages => [...prevImages, blendData.imageUrl]);
   };  
+
+  
+  const handleCloseImage = () => {
+    setFullScreenImage(null);
+  }
+  const handleImagePress = (imageUrl) => {
+    //this should handle issues between swiping and pressing
+    setTimeout(() => {
+      setFullScreenImage(imageUrl);
+    }, 200);
+  };
 
   return (
     <View style={styles.container}>
@@ -71,18 +88,27 @@ const FunStuffScreen = () => {
         <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
       </Appbar.Header>
 
-      {funImages.map((imageUrl, index) => (
-        <Image key={index} source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} />
-      ))}
-
-      {selectedBlend && (
-        <View style={styles.selectedBlendContainer}>
-          <Text style={styles.selectedBlendText}>{selectedBlend.text}</Text>
-          <Image source={{ uri: selectedBlend.imageUrl }} style={styles.image} />
-        </View>
-      )}
+      <Swiper autoplay={true} showsPagination={false} showsButtons={true} style={{ backgroundColor: '#CCC4be' }}>
+        {swiperImages.map((imageUrl, index) => (
+          <TouchableOpacity key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} onPress={() => handleImagePress(imageUrl)}>
+            <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
+          </TouchableOpacity>
+        ))}
+      </Swiper>
 
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={!!fullScreenImage}
+        onRequestClose={handleCloseImage}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+          <Image source={{ uri: fullScreenImage }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+          <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
+        </View>
+      </Modal>
 
       <Modal
         animationType="slide"

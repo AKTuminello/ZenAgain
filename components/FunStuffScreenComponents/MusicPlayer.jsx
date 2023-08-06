@@ -39,7 +39,9 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
 
       const { sound } = await Audio.Sound.createAsync({ uri: fileUrl });
       setAudio(sound);
-      await sound.playAsync();
+      if (isMusicOn) {
+        await sound.playAsync();
+      }
     } catch (error) {
       console.error('Error playing audio:', error);
     }
