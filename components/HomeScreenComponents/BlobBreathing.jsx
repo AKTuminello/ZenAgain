@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Animated, Text, Modal, TouchableOpacity } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 
@@ -6,29 +6,21 @@ const BlobBreathing = () => {
   const { colors } = useTheme();
   const animatedScale = useRef(new Animated.Value(1)).current;
   const animatedColor = useRef(new Animated.Value(0)).current;
-  const [blobText, setBlobText] = useState("Don't Panic!");
+  const [blobText, setBlobText] = useState("Breathe...");
   const [modalVisible, setModalVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const timeouts = useRef([]);
+  const interval = useRef(null);
 
   const interpolateColor = animatedColor.interpolate({
     inputRange: [0, 1],
     outputRange: ['rgb(255,170,160)', 'rgb(181,210,255)']
   });
 
-  const clearAllTimeouts = () => {
-    timeouts.current.forEach(clearTimeout);
-    timeouts.current = [];
-  };
-
-  useEffect(() => {
-    return () => clearAllTimeouts(); // Clear timeouts when component unmounts
-  }, []);
-
-  const startBreathing = () => {
-    setIsAnimating(true);
-    
-    const breathingCycle = () => {
+  const breathingCycle = () => {
+    const cycleDuration = 4000 + 7000 + 8000;
+  
+    Animated.loop(
       Animated.sequence([
         Animated.timing(animatedScale, {
           toValue: 2.5,
@@ -59,32 +51,54 @@ const BlobBreathing = () => {
             useNativeDriver: false,
           }),
         ]),
-      ]).start(() => {
-        if (isAnimating) {
-          breathingCycle();
-        }
-      });
-    };
-
-    setBlobText("3");
-    timeouts.current.push(setTimeout(() => setBlobText("2"), 1000));
-    timeouts.current.push(setTimeout(() => setBlobText("1"), 2000));
+      ]),
+      {
+        iterations: -1,
+      }
+    ).start();
+  
+    setBlobText("Inhale...");
+  
     timeouts.current.push(setTimeout(() => {
-      setBlobText("Inhale...");
-      breathingCycle();
-      timeouts.current.push(setTimeout(() => setBlobText("Hold..."), 4000));
-      timeouts.current.push(setTimeout(() => setBlobText("Exhale..."), 11000));
-    }, 3000));
+      setBlobText("Hold...");
+      timeouts.current.push(setTimeout(() => {
+        setBlobText("Exhale...");
+        timeouts.current.push(setTimeout(() => {
+          setBlobText("Inhale...");
+        }, 8000));
+      }, 7000));
+    }, 4000));
+  
+    interval.current = setInterval(() => {
+      timeouts.current.push(setTimeout(() => {
+        setBlobText("Hold...");
+        timeouts.current.push(setTimeout(() => {
+          setBlobText("Exhale...");
+          timeouts.current.push(setTimeout(() => {
+            setBlobText("Inhale...");
+          }, 8000));
+        }, 7000));
+      }, 4000));
+    }, cycleDuration);
+  };
+  
+  const startBreathing = () => {
+    setIsAnimating(true);
+    setBlobText("Inhale...");
+    breathingCycle();
   };
 
   const handleTouchEnd = () => {
     setIsAnimating(false);
-    Animated.timing(animatedScale).stop();
-    Animated.timing(animatedColor).stop();
-    clearAllTimeouts();
-    setBlobText("Don't Panic!");
+    setBlobText("Breathe...");
     animatedScale.setValue(1);
     animatedColor.setValue(0);
+
+    timeouts.current.forEach(clearTimeout);
+    timeouts.current = [];
+
+    clearInterval(interval.current);
+    interval.current = null;
   };
 
   const scale = {
@@ -112,16 +126,18 @@ const BlobBreathing = () => {
           </View>
         </View>
       </Modal>
+
       <Animated.View style={[styles.blobContainer, scale, { backgroundColor: interpolateColor }]}>
         <Text style={styles.blobPlaceholder}>{blobText}</Text>
       </Animated.View>
-      <Button 
-        mode="contained" 
-        color="lightgray" 
-        labelStyle={{ color: colors.text }} 
-        onPressIn={startBreathing} 
+
+      <Button
+        mode="contained"
+        color="lightgray"
+        labelStyle={{ color: colors.text }}
+        onPressIn={startBreathing}
         onPressOut={handleTouchEnd}
-        style={{ marginTop: 50 }}
+        style={{ marginTop: 90 }}
       >
         Press
       </Button>
@@ -146,13 +162,14 @@ const styles = {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
-    shadowRadius: 2,  
+    shadowRadius: 2,
     elevation: 5,
   },
   blobPlaceholder: {
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center',
+    fontSize: 22,
   },
   centeredView: {
     flex: 1,
@@ -195,4 +212,4 @@ const styles = {
 };
 
 export default BlobBreathing;
-//This code works as expected, minus the repeat.
+
