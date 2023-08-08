@@ -6,13 +6,14 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { getAuth, onAuthStateChanged } from '@firebase/auth';
 import { AuthProvider, AuthContext } from './AuthContext';
 import * as SplashScreen from 'expo-splash-screen';
-
+import JitteryBall from './JitteryBall';
+import AgreementScreen from './screens/AgreementScreen';
 import FunStuffScreen from './screens/FunStuffScreen';
 import HomeScreen from './screens/HomeScreen';
 import AuthenticationScreen from './screens/AuthenticationScreen';
-import TestSwiperScreen from './screens/TestSwiperScreen';
 import UserScreen from './screens/UserScreen';
-import UserGalleryScreen from './screens/UserGalleryScreen'; // make sure this import is correct
+import UserGalleryScreen from './screens/UserGalleryScreen';
+import * as Font from 'expo-font';
 
 const MainTab = createMaterialBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -31,14 +32,53 @@ const SignInNavigator = () => {
   );
 };
 
-const UserNavigator = () => (
-  <MainTab.Navigator>
-    <MainTab.Screen name="Home" component={HomeScreen} />
-    <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
-    <MainTab.Screen name="My Stuff" component={UserScreen} />
-    <MainTab.Screen name="User Gallery" component={UserGalleryScreen} />
-  </MainTab.Navigator>
-);
+const theme = {
+  ...DefaultTheme,
+  roundness: 5,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#bee4ed',
+    accent: '#49176e', 
+    background: '#aea1d0',
+    surface: '#bee4ed',
+    text: '#00525e',
+    error: '#a4b4be',
+  },
+  fonts: {
+    ...DefaultTheme.fonts,
+    regular: {
+      fontFamily: 'JosefinSans-VariableFont_wght',
+      fontWeight: 'normal',
+    },
+    medium: {
+      fontFamily: 'JosefinSans-VariableFont_wght',
+      fontWeight: 'bold',
+    },
+    light: {
+      fontFamily: 'JosefinSans-VariableFont_wght',
+      fontWeight: 'normal',
+    },
+    thin: {
+      fontFamily: 'JosefinSans-VariableFont_wght',
+      fontWeight: 'normal',
+    },
+  },
+};
+
+const UserNavigator = () => {
+  return (
+    <MainTab.Navigator
+      barStyle={{ backgroundColor: theme.colors.primary }}
+      activeColor={theme.colors.text}
+      inactiveColor={theme.colors.accent}
+    >
+      <MainTab.Screen name="Home" component={HomeScreen} />
+      <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
+      <MainTab.Screen name="My Stuff" component={UserScreen} />
+      <MainTab.Screen name="User Gallery" component={UserGalleryScreen} />
+    </MainTab.Navigator>
+  );
+};
 
 const MainNavigator = () => {
   const { user } = useContext(AuthContext);
@@ -52,22 +92,27 @@ const MainNavigator = () => {
   );
 };
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#A99F97',  // the coffee color
-    accent: '#E2DCD7',  // the pearl color
-    // add other colors if needed
-  },
-};
-
 const App = () => {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const [agreementAccepted, setAgreementAccepted] = useState(false);
   const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'JosefinSans-VariableFont_wght': require('./assets/fonts/Josefin_Sans/JosefinSans-VariableFont_wght.ttf'),
+        'JosefinSans-Italic-VariableFont_wght': require('./assets/fonts/Josefin_Sans/JosefinSans-Italic-VariableFont_wght.ttf'),
+      });
+      setFontsLoaded(true);
+    };
+    
+    loadFonts();
   }, []);
 
   useEffect(() => {
@@ -80,11 +125,26 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && fontsLoaded) {
+      console.log("Splash screen hidden");
       SplashScreen.hideAsync();
     }
-  }, [loading]);
+  }, [loading, fontsLoaded]);
 
+  if (!fontsLoaded) {
+    return null; 
+  }
+
+  if (!animationComplete) {
+    console.log("Showing JitteryBall");
+    return <JitteryBall onComplete={() => setAnimationComplete(true)} />;
+  }
+
+  if (!agreementAccepted) {
+    return <AgreementScreen onAgree={() => setAgreementAccepted(true)} />;
+  }
+
+  console.log("Showing MainNavigator");
   return (
     <NavigationContainer>
       <MainNavigator />
