@@ -65,7 +65,7 @@ const FunStuffScreen = () => {
     });
   
     setFunImages(images);
-    setSwiperImages(images); // Initial images for the swiper
+    setSwiperImages(images); 
   };
 
   const handleBlendSelection = async (blendData) => {
@@ -76,7 +76,7 @@ const FunStuffScreen = () => {
     setSelectedBlend(blendData);
     setModalVisible(true);
   
-    // Add blend information to the swiper
+  
     setSwiperImages(prevImages => [...prevImages, {
       url: blendData.imageUrl,
       nickname: blendData.name,
@@ -101,21 +101,29 @@ const FunStuffScreen = () => {
         <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
       </Appbar.Header>
 
-      <Swiper autoplay={true} showsPagination={false} showsButtons={true} style={{ backgroundColor: '#CCC4be' }}>
-        {swiperImages.map((image, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} 
-            onPress={() => handleImagePress(image.url)}
-          >
-            <Text>{image.nickname}</Text>
-            <Image source={{ uri: image.url }} style={{ width: 200, height: 200 }} />
-            <Text>{image.text}</Text>
-          </TouchableOpacity>
-        ))}
-      </Swiper>
-
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
+
+      <Swiper 
+  autoplay={true} 
+  showsPagination={false} 
+  showsButtons={true} 
+  buttonColor="#FFFFFF" // color of the arrows
+  buttonWrapperStyle={{backgroundColor: 'rgba(0,0,0,0.5)'}} // background color of the buttons' container
+  style={{ backgroundColor: '#FFD1DC' }}
+>
+  {swiperImages.map((image, index) => (
+    <TouchableOpacity 
+      key={index} 
+      style={{ marginTop: 20, maxWidth: '90%', maxHeight: 50, justifyContent: 'center', alignItems: 'center' }} 
+      onPress={() => handleImagePress(image.url)}
+    >
+      <Text>{image.nickname}</Text>
+      <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} />
+      <Text>{image.text}</Text>
+    </TouchableOpacity>
+  ))}
+</Swiper>
+
 
       <Modal
         animationType="slide"
@@ -124,7 +132,7 @@ const FunStuffScreen = () => {
         onRequestClose={handleCloseImage}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-          <Image source={{ uri: fullScreenImage }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+          <Image source={{ uri: fullScreenImage }} style={{ width: '20%', height: '20%', resizeMode: 'contain' }} />
           <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
         </View>
       </Modal>
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: '#f0f0f0',
-    padding: 10,
+    padding: 0,
   },
   topBar: {
     flexDirection: 'row',
@@ -179,15 +187,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     resizeMode: 'cover',
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 10,
   },
   modalText: {
     marginBottom: 15,
