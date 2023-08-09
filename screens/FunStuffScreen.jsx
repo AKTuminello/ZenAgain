@@ -103,26 +103,28 @@ const FunStuffScreen = () => {
 
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
-      <Swiper 
-  autoplay={true} 
-  showsPagination={false} 
-  showsButtons={true} 
-  buttonColor="#FFFFFF" // color of the arrows
-  buttonWrapperStyle={{backgroundColor: 'rgba(0,0,0,0.5)'}} // background color of the buttons' container
-  style={{ backgroundColor: '#FFD1DC' }}
->
-  {swiperImages.map((image, index) => (
-    <TouchableOpacity 
-      key={index} 
-      style={{ marginTop: 20, maxWidth: '90%', maxHeight: 50, justifyContent: 'center', alignItems: 'center' }} 
-      onPress={() => handleImagePress(image.url)}
-    >
-      <Text>{image.nickname}</Text>
-      <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} />
-      <Text>{image.text}</Text>
-    </TouchableOpacity>
-  ))}
-</Swiper>
+      <View style={{ height: '50%' }}>
+  <Swiper 
+    autoplay={false} 
+    showsPagination={false} 
+    showsButtons={true} 
+    nextButton={<Text style={styles.buttonText}>Next</Text>}
+    prevButton={<Text style={styles.buttonText}>Prev</Text>}
+    style={{ backgroundColor: '#FFD1DC' }}
+  >
+    {swiperImages.map((image, index) => (
+      <TouchableOpacity 
+        key={index} 
+        style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
+        onPress={() => handleImagePress(image.url)}
+      >
+        <Text>{image.nickname}</Text>
+        <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} />
+        <Text>{image.text}</Text>
+      </TouchableOpacity>
+    ))}
+  </Swiper>
+</View>
 
 
       <Modal
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 40,
   },
   fab: {
     marginHorizontal: 10,
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 50,
   },
   modalText: {
     marginBottom: 15,

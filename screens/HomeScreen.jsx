@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={{...globalStyles.container, backgroundColor: colors.background }}>
       <Appbar.Header style={{ backgroundColor: colors.primary }}>
-        <Appbar.Content title="Welcome to ZenAgain" titleStyle={{ color: colors.text }} />
+        <Appbar.Content title="Catch Your Breath" titleStyle={{ color: colors.text }} />
       </Appbar.Header>
       <BlobBreathing />
     </View>
