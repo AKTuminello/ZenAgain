@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import MusicPlayer from '../components/FunStuffScreenComponents/MusicPlayer';
 import BlendMenu from '../components/FunStuffScreenComponents/BlendMenu';
-import { FAB, Portal, Provider, Appbar } from 'react-native-paper';
+import { FAB, Appbar } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import { globalStyles } from '../assets/globalStyles';
 
@@ -76,13 +76,13 @@ const FunStuffScreen = () => {
     setSelectedBlend(blendData);
     setModalVisible(true);
   
-  
     setSwiperImages(prevImages => [...prevImages, {
       url: blendData.imageUrl,
       nickname: blendData.name,
       text: blendData.description
     }]);
   };
+
   const handleImagePress = (imageUrl) => {
     setTimeout(() => {
       setFullScreenImage(imageUrl);
@@ -92,40 +92,42 @@ const FunStuffScreen = () => {
 
   const handleCloseImage = () => {
     setFullScreenImage(null);
-  }
+  };
 
   return (
     <View style={styles.container}>
       <Appbar.Header>
-        <Appbar.Content title="I want to feel more..." />
+        <Appbar.Content title="Enhancements" />
         <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
       </Appbar.Header>
 
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
       <View style={{ height: '50%' }}>
-  <Swiper 
-    autoplay={false} 
-    showsPagination={false} 
-    showsButtons={true} 
-    nextButton={<Text style={styles.buttonText}>Next</Text>}
-    prevButton={<Text style={styles.buttonText}>Prev</Text>}
-    style={{ backgroundColor: '#FFD1DC' }}
-  >
-    {swiperImages.map((image, index) => (
-      <TouchableOpacity 
-        key={index} 
-        style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
-        onPress={() => handleImagePress(image.url)}
-      >
-        <Text>{image.nickname}</Text>
-        <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} />
-        <Text>{image.text}</Text>
-      </TouchableOpacity>
-    ))}
-  </Swiper>
-</View>
-
+        <Swiper 
+          autoplay={false} 
+          showsPagination={false} 
+          showsButtons={true} 
+          nextButton={<Text style={styles.buttonText}>Next</Text>}
+          prevButton={<Text style={styles.buttonText}>Prev</Text>}
+          style={{ backgroundColor: '#FFD1DC' }}
+        >
+          {swiperImages.map((image, index) => (
+            <TouchableOpacity 
+              key={index} 
+              style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
+              onPress={() => handleImagePress(image.url)}
+            >
+              <Text>{image.nickname}</Text>
+              <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} />
+              <Text>{image.text}</Text>
+            </TouchableOpacity>
+          ))}
+        </Swiper>
+        <Text>To use the above: choose a blend from the menu.</Text>
+        <Text>Adjust your volume--or turn the music off.</Text>
+        <Text>Tap the picture to make it larger and use it as a focal point.</Text>
+      </View>
 
       <Modal
         animationType="slide"
@@ -134,7 +136,7 @@ const FunStuffScreen = () => {
         onRequestClose={handleCloseImage}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-          <Image source={{ uri: fullScreenImage }} style={{ width: '20%', height: '20%', resizeMode: 'contain' }} />
+          <Image source={{ uri: fullScreenImage }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
           <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
         </View>
       </Modal>
@@ -148,13 +150,14 @@ const FunStuffScreen = () => {
         {selectedBlend && (
           <View style={styles.centeredView}>
             <Text style={styles.modalText}>{selectedBlend.name}</Text>
-            <Text style={styles.modalText}>{selectedBlend.description}</Text>
-            <Text style={styles.modalText}>{selectedBlend.ingredients}</Text>
+            <Text style={styles.modalText}>{selectedBlend.oildescription}</Text>
+            {selectedBlend.ingredients.map((ingredient, index) => (
+              <Text key={index} style={styles.modalText}>{ingredient}</Text>
+            ))}
             <FAB icon="close" onPress={() => setModalVisible(false)} style={styles.closeButton} />
           </View>
         )}
       </Modal>
-
     </View>
   );
 };
@@ -166,32 +169,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 0,
   },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 40,
-  },
-  fab: {
-    marginHorizontal: 10,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  selectedBlendContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectedBlendText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  image: {
-    width: 150,
-    height: 150,
-    resizeMode: 'cover',
+  buttonText: {
+    color: '#000',
   },
   centeredView: {
     flex: 1,

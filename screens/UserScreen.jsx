@@ -17,6 +17,8 @@ import { onSnapshot } from '@firebase/firestore';
 import HomeScreen from './HomeScreen';
 import UserGallery from './UserGalleryScreen';
 import FunStuffScreen from './FunStuffScreen';
+import MoodTrackerScreen from './MoodTrackerScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -318,6 +320,7 @@ const UserScreen = () => {
       </Appbar.Header>
       <View style={globalStyles.container}>
         <Swiper autoplay={true} showsPagination={false} showsButtons={true} style={{ backgroundColor: '#CCC4be' }}>
+          
           {[
             { uri: profilePic, name: 'My Profile Pic', text: profilePicText },
             { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
@@ -337,14 +340,16 @@ const UserScreen = () => {
             </TouchableOpacity>
           ))}
         </Swiper>
+        <MoodTrackerScreen /> 
       </View>
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={handleModalClose}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'top', alignItems: 'center' }}>
           <View style={{ height: '75%', width: '90%', backgroundColor: '#FFB7D5', borderRadius: 20, padding: 20, justifyContent: 'center', alignItems: 'center' }}>
             <Text>What do you want to change about this image?</Text>
 

@@ -13,7 +13,7 @@ const ModalContent = ({ isModalVisible, setModalVisible, selectedBlend }) => {
       {selectedBlend && (
         <View style={styles.centeredView}>
           <Text style={styles.text}>{selectedBlend.name}</Text>
-          <Text style={styles.text}>{selectedBlend.description}</Text>
+          <Text style={styles.text}>{selectedBlend.oildescription}</Text>
           <Text style={styles.text}>{selectedBlend.ingredients}</Text>
           <FAB icon="close" onPress={() => setModalVisible(false)} style={styles.closeButton} />
         </View>
