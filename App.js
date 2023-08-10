@@ -16,7 +16,6 @@ import UserGalleryScreen from './screens/UserGalleryScreen';
 import * as Font from 'expo-font';
 import MoodTrackerScreen from './screens/MoodTrackerScreen';
 
-
 const MainTab = createMaterialBottomTabNavigator();
 const RootStack = createStackNavigator();
 
@@ -26,7 +25,7 @@ const SignInNavigator = () => {
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
-        <RootStack.Screen name="User" component={UserScreen} />
+        <RootStack.Screen name="User" component={UserNavigator} />
       ) : (
         <RootStack.Screen name="Auth" component={AuthenticationScreen} />
       )}
@@ -40,7 +39,7 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#bee4ed',
-    accent: '#49176e', 
+    accent: '#49176e',
     background: '#aea1d0',
     surface: '#bee4ed',
     text: '#00525e',
@@ -82,18 +81,6 @@ const UserNavigator = () => {
   );
 };
 
-const MainNavigator = () => {
-  const { user } = useContext(AuthContext);
-
-  return user ? <UserNavigator /> : (
-    <MainTab.Navigator>
-      <MainTab.Screen name="Home" component={HomeScreen} />
-      <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
-      <MainTab.Screen name="Sign In" component={SignInNavigator} />
-    </MainTab.Navigator>
-  );
-};
-
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -113,7 +100,7 @@ const App = () => {
       });
       setFontsLoaded(true);
     };
-    
+
     loadFonts();
   }, []);
 
@@ -134,7 +121,7 @@ const App = () => {
   }, [loading, fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null; 
+    return null;
   }
 
   if (!animationComplete) {
@@ -149,7 +136,7 @@ const App = () => {
   console.log("Showing MainNavigator");
   return (
     <NavigationContainer>
-      <MainNavigator />
+      <SignInNavigator />
     </NavigationContainer>
   );
 };
