@@ -13,6 +13,7 @@ import { globalStyles } from '../assets/globalStyles';
 import { Appbar } from 'react-native-paper';
 import LogoutButton from '../components/UserScreenComponents/LogoutButton';
 import { onSnapshot } from '@firebase/firestore';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
 import HomeScreen from './HomeScreen';
 import UserGallery from './UserGalleryScreen';
@@ -48,7 +49,7 @@ const UserScreen = () => {
   const [favePic2DisplayInUserGallery, setFavePic2DisplayInUserGallery] = useState(false);
   const [favePic3DisplayInFunStuff, setFavePic3DisplayInFunStuff] = useState(false);
   const [favePic3DisplayInUserGallery, setFavePic3DisplayInUserGallery] = useState(false);
-  const [profilePicText, setProfilePicText] = useState('');
+  const [myprofilepic_text, setmyprofilepic_text] = useState('');
   const [favePic1Text, setFavePic1Text] = useState('');
   const [favePic2Text, setFavePic2Text] = useState('');
   const [favePic3Text, setFavePic3Text] = useState('');
@@ -133,15 +134,33 @@ const UserScreen = () => {
         userDocRef,
         {
           [fieldName]: imageUrl,
-          [`${fieldName}_text`]: selectedImageText, // updated here
           [`${fieldName}_displayInFunStuff`]: displayInFunStuff,
           [`${fieldName}_displayInUserGallery`]: displayInUserGallery,
         },
         { merge: true }
       );
-      handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText);
     }
-  };
+
+  
+      // Update the text state based on fieldName
+      switch (fieldName) {
+        case 'profilePic':
+          setmyprofilepic_text(selectedImageText);
+          break;
+        case 'favePic1':
+          setFavePic1Text(selectedImageText);
+          break;
+        case 'favePic2':
+          setFavePic2Text(selectedImageText);
+          break;
+        case 'favePic3':
+          setFavePic3Text(selectedImageText);
+          break;
+        default:
+          break;
+      }
+    }
+  
   
   const handleImageTextUpdate = async (fieldName, text) => {
     const db = getFirestore();
@@ -150,7 +169,7 @@ const UserScreen = () => {
   
     switch (fieldName) {
       case 'profilePic':
-        setProfilePicText(text);
+        setmyprofilepic_text(text);
         break;
       case 'favePic1':
         setFavePic1Text(text);
@@ -174,7 +193,7 @@ const UserScreen = () => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         setProfilePic(userData.profilePic || null);
-        setProfilePicText(userData.myprofilepic_text || '');
+        setmyprofilepic_text(userData.myprofilepic_text || '');
         console.log(`Profile picture text: ${userData.myprofilepic_text}`);
         setProfilePicDisplayInFunStuff(userData.profilePic_displayInFunStuff || false);
         setProfilePicDisplayInUserGallery(userData.profilePic_displayInUserGallery || false);
@@ -256,8 +275,13 @@ const UserScreen = () => {
     setModalVisible(true);
   };
 
-  const handleModalClose = () => {
-    handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText);
+  const handleModalClose = async () => {
+    const fieldName = selectedImage.name.split(' ').join('').toLowerCase();
+    // Update the text
+    await handleImageTextUpdate(fieldName, selectedImageText);
+    // Update the display locations
+    await handleImageDisplayToggle(fieldName, 'FunStuff', selectedImageDisplayFunStuff);
+    await handleImageDisplayToggle(fieldName, 'UserGallery', selectedImageDisplayUserGallery);
     setModalVisible(false);
     setSelectedImageDisplayFunStuff(false);
     setSelectedImageDisplayUserGallery(false);
@@ -284,7 +308,7 @@ const UserScreen = () => {
       switch (fieldName) {
         case 'profilePic':
           setProfilePic(null);
-          setProfilePicText('');
+          setmyprofilepic_text('');
           setProfilePicDisplayInFunStuff(false);
           setProfilePicDisplayInUserGallery(false);
           break;
@@ -313,21 +337,30 @@ const UserScreen = () => {
   };
 
   return (
-    <ScrollView style={globalStyles.container}>
+    <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#f0f0f0', padding: 0 }}>
       <Appbar.Header>
         <Appbar.Content title={`Welcome ${nickname || 'User'}`} />
         <LogoutButton handleLogout={handleLogout} />
       </Appbar.Header>
-      <View style={globalStyles.container}>
-        <Swiper autoplay={true} showsPagination={false} showsButtons={true} style={{ backgroundColor: '#CCC4be' }}>
-          
+  
+      <View style={{ height: '100%' }}>
+        <Swiper
+          autoplay={true}
+          showsPagination={false}
+          showsButtons={true}
+          style={{ backgroundColor: '#CCC4be' }}
+        >
           {[
-            { uri: profilePic, name: 'My Profile Pic', text: profilePicText },
+            { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
             { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
             { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
             { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
           ].map((image, index) => (
-            <TouchableOpacity key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} onPress={() => handleImagePress(image.uri, image.name)}>
+            <TouchableOpacity
+              key={index}
+              style={{ marginTop: 75, marginBottom: 70, flex: 1, justifyContent: 'center', alignItems: 'center' }}
+              onPress={() => handleImagePress(image.uri, image.name)}
+            >
               <Text>{image.name}</Text>
               {image.uri ? (
                 <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />
@@ -340,19 +373,21 @@ const UserScreen = () => {
             </TouchableOpacity>
           ))}
         </Swiper>
-        <MoodTrackerScreen /> 
+        <MoodTrackerScreen />
       </View>
-
+  
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={handleModalClose}
       >
-        <View style={{ flex: 1, justifyContent: 'top', alignItems: 'center' }}>
+        <KeyboardAvoidingView
+          behavior="height"
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <View style={{ height: '75%', width: '90%', backgroundColor: '#FFB7D5', borderRadius: 20, padding: 20, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>What do you want to change about this image?</Text>
-
+            <Text>What do you want to change about {selectedImage.name}?</Text>
             <TextInput
               value={selectedImageText}
               onChangeText={setSelectedImageText}
@@ -360,7 +395,6 @@ const UserScreen = () => {
               placeholder="Enter image text"
               style={{ width: '80%', padding: 10, borderWidth: 1, borderRadius: 5, marginTop: 10 }}
             />
-
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', marginTop: 10 }}>
               <Text>Display in Fun Stuff:</Text>
               <Switch
@@ -368,7 +402,6 @@ const UserScreen = () => {
                 onValueChange={setSelectedImageDisplayFunStuff}
               />
             </View>
-
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', marginTop: 10 }}>
               <Text>Display in User Gallery:</Text>
               <Switch
@@ -376,27 +409,23 @@ const UserScreen = () => {
                 onValueChange={setSelectedImageDisplayUserGallery}
               />
             </View>
-
             <TouchableOpacity style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }} onPress={() => {
               handleChooseImage(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageDisplayFunStuff, selectedImageDisplayUserGallery, selectedImageText);
               handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText);
             }}>
               <Text>Choose a new image.</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }} onPress={() => handleDeleteImage(selectedImage.name.split(' ').join('').toLowerCase())}>
               <Text>Delete this image</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }} onPress={handleModalClose}>
               <Text>I'm done.</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
-
-
 export default UserScreen;
+  

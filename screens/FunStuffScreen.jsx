@@ -7,6 +7,7 @@ import BlendMenu from '../components/FunStuffScreenComponents/BlendMenu';
 import { FAB, Appbar } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import { globalStyles } from '../assets/globalStyles';
+import { onSnapshot } from 'firebase/firestore';
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
@@ -16,6 +17,7 @@ const FunStuffScreen = () => {
   const [funImages, setFunImages] = useState([]);
   const [swiperImages, setSwiperImages] = useState([]);
   const [fullScreenImage, setFullScreenImage] = useState(null);
+  
 
   useEffect(() => {
     fetchBlendsFromFirestore();
@@ -28,46 +30,53 @@ const FunStuffScreen = () => {
     setBlends(blends);
   };
 
-  const fetchFunStuffImagesFromFirestore = async () => {
-    const querySnapshot = await getDocs(collection(db, 'users'));
-    const users = querySnapshot.docs.map(doc => doc.data());
-    const images = [];
+  const fetchFunStuffImagesFromFirestore = () => {
+    const usersCollectionRef = collection(db, 'users');
   
-    users.forEach(user => {
-      if (user.profilePic_displayInFunStuff) {
-        images.push({ 
-          url: user.profilePic, 
-          text: user.profilePic_text, 
-          nickname: user.nickname 
-        });
-      }
-      if (user.favePic1_displayInFunStuff) {
-        images.push({ 
-          url: user.favePic1, 
-          text: user.myfavoriteimage_text, 
-          nickname: user.nickname 
-        });
-      }
-      if (user.favePic2_displayInFunStuff) {
-        images.push({ 
-          url: user.favePic2, 
-          text: user.mysecondfavorite_text, 
-          nickname: user.nickname 
-        });
-      }
-      if (user.favePic3_displayInFunStuff) {
-        images.push({ 
-          url: user.favePic3, 
-          text: user.mythirdfavorite_text, 
-          nickname: user.nickname 
-        });
-      }
+    // Subscribe to updates using onSnapshot
+    const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
+      const users = querySnapshot.docs.map(doc => doc.data());
+      const images = [];
+    
+      users.forEach(user => {
+        if (user.profilePic_displayInFunStuff) {
+          images.push({ 
+            url: user.profilePic, 
+            text: user.profilePic_text, 
+            nickname: user.nickname 
+          });
+        }
+        if (user.favePic1_displayInFunStuff) {
+          images.push({ 
+            url: user.favePic1, 
+            text: user.myfavoriteimage_text, 
+            nickname: user.nickname 
+          });
+        }
+        if (user.favePic2_displayInFunStuff) {
+          images.push({ 
+            url: user.favePic2, 
+            text: user.mysecondfavorite_text, 
+            nickname: user.nickname 
+          });
+        }
+        if (user.favePic3_displayInFunStuff) {
+          images.push({ 
+            url: user.favePic3, 
+            text: user.mythirdfavorite_text, 
+            nickname: user.nickname 
+          });
+        }
+      });
+      console.log('Fetched Images:', images);
+      setFunImages(images);
+      setSwiperImages(images); 
     });
   
-    setFunImages(images);
-    setSwiperImages(images); 
+    // Return the unsubscribe function to be called on cleanup
+    return unsubscribe;
   };
-
+  
   const handleBlendSelection = async (blendData) => {
     if (selectedBlend && selectedBlend.id === blendData.id) {
       return;
@@ -103,7 +112,7 @@ const FunStuffScreen = () => {
 
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
-      <View style={{ height: '50%' }}>
+      <View style={{ height: '54%' }}>
         <Swiper 
           autoplay={false} 
           showsPagination={false} 
