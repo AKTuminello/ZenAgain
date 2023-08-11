@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, View, Dimensions } from 'react-native';
+import { Animated, Easing, StyleSheet, View, Dimensions, Text } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -7,6 +7,8 @@ const screenHeight = Dimensions.get('window').height;
 const JitteryBall = ({ onComplete }) => {
   const moveXAnim = useRef(new Animated.Value(0)).current;
   const moveYAnim = useRef(new Animated.Value(screenHeight / 2)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
   const [animationFinished, setAnimationFinished] = useState(false);
 
   useEffect(() => {
@@ -16,13 +18,13 @@ const JitteryBall = ({ onComplete }) => {
       sequence.push(
         Animated.timing(moveXAnim, {
           toValue: Math.random() * screenWidth,
-          duration: 100,  // Increased speed
+          duration: 100,
           easing: Easing.ease,
           useNativeDriver: true
         }),
         Animated.timing(moveYAnim, {
           toValue: Math.random() * screenHeight,
-          duration: 100,  // Increased speed
+          duration: 100,
           easing: Easing.ease,
           useNativeDriver: true
         })
@@ -31,14 +33,26 @@ const JitteryBall = ({ onComplete }) => {
 
     sequence.push(
       Animated.timing(moveXAnim, {
-        toValue: screenWidth / 2,
+        toValue: screenWidth / 2 - 25,
         duration: 250,
         easing: Easing.ease,
         useNativeDriver: true
       }),
       Animated.timing(moveYAnim, {
-        toValue: screenHeight / 2,
+        toValue: screenHeight / 2 - 25,
         duration: 250,
+        easing: Easing.ease,
+        useNativeDriver: true
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 2,
+        duration: 500,
+        easing: Easing.ease,
+        useNativeDriver: true
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 1000,
         easing: Easing.ease,
         useNativeDriver: true
       })
@@ -61,17 +75,31 @@ const JitteryBall = ({ onComplete }) => {
 
   return (
     <View style={styles.container}>
-      <Animated.View
+      <Animated.Image
         style={[
           styles.ball,
           {
             transform: [
               { translateX: moveXAnim },
-              { translateY: moveYAnim }
+              { translateY: moveYAnim },
+              { scale: scaleAnim }
             ]
           }
         ]}
+        source={require('./assets/images/cutes.png')}
       />
+      <Animated.Text
+        style={[
+          styles.text,
+          {
+            opacity: opacityAnim,
+            top: screenHeight / 2 +20 , // Adjust based on your preference
+            left: screenWidth / 2 - 145, // Adjust based on your preference
+          }
+        ]}
+      >
+        ZenAgain
+      </Animated.Text>
     </View>
   );
 };
@@ -79,14 +107,17 @@ const JitteryBall = ({ onComplete }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lightgray'
+    backgroundColor: 'pink'
   },
   ball: {
     width: 50,
     height: 50,
-    borderRadius: 25,
-    backgroundColor: 'darkgray',
     position: 'absolute'
+  },
+  text: {
+    fontSize: 42,
+    position: 'absolute',
+    textAlign: 'center'
   }
 });
 

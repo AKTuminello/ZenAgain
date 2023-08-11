@@ -1,25 +1,23 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Alert, Text, ScrollView, Image, TextInput, TouchableOpacity, Modal, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Switch, Image, TextInput } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Swiper from 'react-native-swiper';
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth, signOut } from '@firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from '@firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import firebase from 'firebase/app';
 import 'firebase/compat/storage';
 import { AuthContext } from '../AuthContext';
-import { globalStyles } from '../assets/globalStyles';
 import { Appbar } from 'react-native-paper';
 import LogoutButton from '../components/UserScreenComponents/LogoutButton';
-import { onSnapshot } from '@firebase/firestore';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { onSnapshot, updateDoc } from '@firebase/firestore';
+import { KeyboardAvoidingView } from 'react-native';
 
 import HomeScreen from './HomeScreen';
 import UserGallery from './UserGalleryScreen';
 import FunStuffScreen from './FunStuffScreen';
 import MoodTrackerScreen from './MoodTrackerScreen';
-
 
 const Stack = createStackNavigator();
 
@@ -29,11 +27,11 @@ const UserScreenStack = () => (
     <Stack.Screen name="Home" component={HomeScreen} />
     <Stack.Screen name="UserGallery" component={UserGallery} />
     <Stack.Screen name="FunStuff" component={FunStuffScreen} />
+    <Stack.Screen name="MoodTracker" component={MoodTrackerScreen} /> {/* Add this line */}
   </Stack.Navigator>
 );
 
-
-const UserScreen = () => {
+const UserScreen = ({ navigation }) => {
   const auth = getAuth();
   const { user } = useContext(AuthContext);
   const [nickname, setNickname] = useState(null);
@@ -142,7 +140,7 @@ const UserScreen = () => {
     }
 
   
-      // Update the text state based on fieldName
+      
       switch (fieldName) {
         case 'profilePic':
           setmyprofilepic_text(selectedImageText);
@@ -343,7 +341,7 @@ const UserScreen = () => {
         <LogoutButton handleLogout={handleLogout} />
       </Appbar.Header>
   
-      <View style={{ height: '100%' }}>
+      <View style={{ height: '75%' }}>
         <Swiper
           autoplay={true}
           showsPagination={false}
@@ -373,8 +371,15 @@ const UserScreen = () => {
             </TouchableOpacity>
           ))}
         </Swiper>
-        <MoodTrackerScreen />
+        
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MoodTracker')} // Navigate to MoodTrackerScreen
+          style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }}
+        >
+          <Text>Go to Mood Tracker</Text>
+        </TouchableOpacity>
       </View>
+  
   
       <Modal
         animationType="slide"

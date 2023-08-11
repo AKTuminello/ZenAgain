@@ -18,10 +18,10 @@ import MoodTrackerScreen from './screens/MoodTrackerScreen';
 
 const MainTab = createMaterialBottomTabNavigator();
 const RootStack = createStackNavigator();
+const UserStack = createStackNavigator();
 
 const SignInNavigator = () => {
   const { user } = useContext(AuthContext);
-
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
@@ -66,6 +66,13 @@ const theme = {
   },
 };
 
+const UserStackScreen = () => (
+  <UserStack.Navigator>
+    <UserStack.Screen name="User" component={UserScreen} />
+    <UserStack.Screen name="MoodTracker" component={MoodTrackerScreen} />
+  </UserStack.Navigator>
+);
+
 const UserNavigator = () => {
   return (
     <MainTab.Navigator
@@ -75,7 +82,7 @@ const UserNavigator = () => {
     >
       <MainTab.Screen name="Home" component={HomeScreen} />
       <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
-      <MainTab.Screen name="My Stuff" component={UserScreen} />
+      <MainTab.Screen name="My Stuff" component={UserStackScreen} />
       <MainTab.Screen name="User Gallery" component={UserGalleryScreen} />
     </MainTab.Navigator>
   );

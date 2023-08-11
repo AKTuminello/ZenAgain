@@ -31,7 +31,7 @@ const UserGalleryScreen = () => {
     const images = [];
     users.forEach(user => {
       if (user.profilePic_displayInUserGallery) {
-        images.push({ url: user.profilePic, text: user.profilePic_text || '', nickname: user.nickname });
+        images.push({ url: user.profilePic, text: user.myprofilePic_text || '', nickname: user.nickname });
       }
       if (user.favePic1_displayInUserGallery) {
         images.push({ url: user.favePic1, text: user.myfavoriteimage_text || '', nickname: user.nickname });

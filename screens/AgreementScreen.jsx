@@ -1,21 +1,21 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 const AgreementScreen = ({ onAgree }) => {
-  const { colors, fonts } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.primary, fontFamily: fonts.medium.fontFamily, fontWeight: 'bold' }]}>
+      <Text style={[styles.title, { color: colors.primary, fontWeight: 'bold' }]}>
         User Agreement
       </Text>
 
-      <Text style={[styles.paragraph, { color: colors.text, fontFamily: fonts.medium.fontFamily, fontWeight: 'bold' }]}>
+      <Text style={[styles.paragraph, { color: colors.text, fontWeight: 'normal' }]}>
         This is where the legal text goes. The screen scrolls, just in case.
       </Text>
 
-      <Button mode="contained" color={colors.accent} labelStyle={{ color: colors.background, fontFamily: fonts.medium.fontFamily, fontWeight: 'bold' }} onPress={onAgree}>I Agree to the Terms</Button>
+      <Button title="I Agree to the Terms" color={colors.accent} onPress={onAgree} />
     </ScrollView>
   );
 };
@@ -36,3 +36,4 @@ const styles = StyleSheet.create({
 });
 
 export default AgreementScreen;
+

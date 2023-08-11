@@ -133,8 +133,6 @@ const BlobBreathing = () => {
 
       <Button
         mode="contained"
-        color="lightgray"
-        labelStyle={{ color: colors.text }}
         onPressIn={startBreathing}
         onPressOut={handleTouchEnd}
         style={{ marginTop: 90 }}
