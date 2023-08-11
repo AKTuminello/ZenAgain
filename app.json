@@ -4,12 +4,12 @@
     "slug": "ZenAgain",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/cutes.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets//images/cartoon_monster.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#e25098"
     },
     "assetBundlePatterns": [
       "**/*"

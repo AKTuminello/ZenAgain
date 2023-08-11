@@ -56,12 +56,68 @@ const theme = {
       fontWeight: 'bold',
     },
     light: {
-      fontFamily: 'JosefinSans-VariableFont_wght',
+      fontFamily: 'JosefinSans-Light',
       fontWeight: 'normal',
     },
     thin: {
-      fontFamily: 'JosefinSans-VariableFont_wght',
+      fontFamily: 'JosefinSans-Thin',
       fontWeight: 'normal',
+    },
+    bold: {
+      fontFamily: 'JosefinSans-Bold',
+      fontWeight: 'bold',
+    },
+    italic: {
+      fontFamily: 'JosefinSans-Italic',
+      fontStyle: 'italic',
+    },
+    boldItalic: {
+      fontFamily: 'JosefinSans-BoldItalic',
+      fontWeight: 'bold',
+      fontStyle: 'italic',
+    },
+    extraLight: {
+      fontFamily: 'JosefinSans-ExtraLight',
+      fontWeight: '200',
+    },
+    extraLightItalic: {
+      fontFamily: 'JosefinSans-ExtraLightItalic',
+      fontWeight: '200',
+      fontStyle: 'italic',
+    },
+    lightItalic: {
+      fontFamily: 'JosefinSans-LightItalic',
+      fontWeight: '300',
+      fontStyle: 'italic',
+    },
+    mediumItalic: {
+      fontFamily: 'JosefinSans-MediumItalic',
+      fontWeight: '500',
+      fontStyle: 'italic',
+    },
+    semiBold: {
+      fontFamily: 'JosefinSans-SemiBold',
+      fontWeight: '600',
+    },
+    semiBoldItalic: {
+      fontFamily: 'JosefinSans-SemiBoldItalic',
+      fontWeight: '600',
+      fontStyle: 'italic',
+    },
+    thinItalic: {
+      fontFamily: 'JosefinSans-ThinItalic',
+      fontWeight: '100',
+      fontStyle: 'italic',
+    },
+  },
+  components: {
+    Button: {
+      style: {
+        backgroundColor: '#aea1d0',
+      },
+      contentStyle: {
+        color: '#49176e',
+      },
     },
   },
 };
@@ -102,14 +158,31 @@ const App = () => {
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
+        // Variable fonts
         'JosefinSans-VariableFont_wght': require('./assets/fonts/Josefin_Sans/JosefinSans-VariableFont_wght.ttf'),
         'JosefinSans-Italic-VariableFont_wght': require('./assets/fonts/Josefin_Sans/JosefinSans-Italic-VariableFont_wght.ttf'),
+  
+        // Static fonts
+        'JosefinSans-Regular': require('./assets/fonts/Josefin_Sans/static/JosefinSans-Regular.ttf'),
+        'JosefinSans-Medium': require('./assets/fonts/Josefin_Sans/static/JosefinSans-Medium.ttf'),
+        'JosefinSans-Light': require('./assets/fonts/Josefin_Sans/static/JosefinSans-Light.ttf'),
+        'JosefinSans-Thin': require('./assets/fonts/Josefin_Sans/static/JosefinSans-Thin.ttf'),
+        'JosefinSans-Bold': require('./assets/fonts/Josefin_Sans/static/JosefinSans-Bold.ttf'),
+        'JosefinSans-Italic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-Italic.ttf'),
+        'JosefinSans-BoldItalic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-BoldItalic.ttf'),
+        'JosefinSans-ExtraLight': require('./assets/fonts/Josefin_Sans/static/JosefinSans-ExtraLight.ttf'),
+        'JosefinSans-ExtraLightItalic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-ExtraLightItalic.ttf'),
+        'JosefinSans-LightItalic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-LightItalic.ttf'),
+        'JosefinSans-MediumItalic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-MediumItalic.ttf'),
+        'JosefinSans-SemiBold': require('./assets/fonts/Josefin_Sans/static/JosefinSans-SemiBold.ttf'),
+        'JosefinSans-SemiBoldItalic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-SemiBoldItalic.ttf'),
+        'JosefinSans-ThinItalic': require('./assets/fonts/Josefin_Sans/static/JosefinSans-ThinItalic.ttf'),
       });
       setFontsLoaded(true);
     };
-
     loadFonts();
   }, []);
+  
 
   useEffect(() => {
     const auth = getAuth();
