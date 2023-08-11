@@ -3,10 +3,10 @@ import { StyleSheet } from 'react-native';
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DAE8DA', // The background color you mentioned
+    backgroundColor: '#DAE8DA', 
   },
   text: {
-    color: '#A99F97',  // The coffee color
+    color: '#A99F97',  
   },
   centeredView: {
     flex: 1,
