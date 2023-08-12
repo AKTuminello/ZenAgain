@@ -15,6 +15,7 @@ import UserScreen from './screens/UserScreen';
 import UserGalleryScreen from './screens/UserGalleryScreen';
 import * as Font from 'expo-font';
 import MoodTrackerScreen from './screens/MoodTrackerScreen';
+import { globalStyles } from './assets/globalStyles';
 
 const MainTab = createMaterialBottomTabNavigator();
 const RootStack = createStackNavigator();

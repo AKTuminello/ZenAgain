@@ -1,84 +1,113 @@
 import { StyleSheet } from 'react-native';
 
 const themeColors = {
-  primary: '#bee4ed',
+  primary: '#a4b4be',
   accent: '#49176e',
   background: '#aea1d0',
   surface: '#265ef7',
-  text: '#00525e',
+  text: '#300040',
   error: '#a4b4be',
-};
-
-const themeFonts = {
-  regular: {
-    fontFamily: 'JosefinSans-VariableFont_wght',
-    fontWeight: 'normal',
-  },
-  italic: {
-    fontFamily: 'JosefinSans-Italic',
-    fontStyle: 'italic',
-  },
 };
 
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'flex-start',
     backgroundColor: themeColors.background,
+    padding: 0,
+  },
+  buttonText: {
+    color: '#300040',
+  },
+  swiperContainer: {
+    height: '75%',
+  },
+  
+  swiperItem: {
+    marginTop: 75,
+    marginBottom: 70,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    width: 200,
+    height: 200,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    height: '75%',
+    width: '90%',
+    backgroundColor: '#FFB7D5',
+    borderRadius: 20,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTextInput: {
+    width: '80%',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '80%',
+    marginTop: 10,
+  },
+  button: {
+    backgroundColor: '#D3D3D3',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 24,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 18,
+    margin: 20,
   },
   text: {
     color: themeColors.text,
   },
   instructionsText: {
     color: themeColors.text,
-    fontFamily: themeFonts.italic.fontFamily,
-    fontStyle: themeFonts.italic.fontStyle,
+    fontFamily: 'JosefinSans-Italic', // Assuming italic style
+    fontStyle: 'italic',
     textAlign: 'center',
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
+
+  closeButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: 'white',
+
+  appbarTitle: {
     fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 24,
+    color: themeColors.accent,
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  carouselItemContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  carouselItemImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-  },
-});
+  });
+

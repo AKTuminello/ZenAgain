@@ -13,6 +13,7 @@ import { Appbar } from 'react-native-paper';
 import LogoutButton from '../components/UserScreenComponents/LogoutButton';
 import { onSnapshot, updateDoc } from '@firebase/firestore';
 import { KeyboardAvoidingView } from 'react-native';
+import { globalStyles } from '../assets/globalStyles';
 
 import HomeScreen from './HomeScreen';
 import UserGallery from './UserGalleryScreen';
@@ -334,103 +335,103 @@ const UserScreen = ({ navigation }) => {
     }
   };
 
-  return (
-    <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#f0f0f0', padding: 0 }}>
-      <Appbar.Header>
-        <Appbar.Content title={`Welcome ${nickname || 'User'}`} />
-        <LogoutButton handleLogout={handleLogout} />
-      </Appbar.Header>
-  
-      <View style={{ height: '75%' }}>
-        <Swiper
-          autoplay={true}
-          showsPagination={false}
-          showsButtons={true}
-          style={{ backgroundColor: '#CCC4be' }}
-        >
-          {[
-            { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
-            { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
-            { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
-            { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
-          ].map((image, index) => (
-            <TouchableOpacity
-              key={index}
-              style={{ marginTop: 75, marginBottom: 70, flex: 1, justifyContent: 'center', alignItems: 'center' }}
-              onPress={() => handleImagePress(image.uri, image.name)}
-            >
-              <Text>{image.name}</Text>
-              {image.uri ? (
-                <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />
-              ) : (
-                <View style={{ width: 200, height: 200, backgroundColor: '#ddd', justifyContent: 'center', alignItems: 'center' }}>
-                  <Text>No Image</Text>
-                </View>
-              )}
-              <Text>{image.text}</Text>
-            </TouchableOpacity>
-          ))}
-        </Swiper>
-        
-        <TouchableOpacity
-          onPress={() => navigation.navigate('MoodTracker')} // Navigate to MoodTrackerScreen
-          style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }}
-        >
-          <Text>Go to Mood Tracker</Text>
-        </TouchableOpacity>
-      </View>
-  
-  
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={handleModalClose}
+return (
+  <View style={globalStyles.container}>
+    <Appbar.Header>
+      <Appbar.Content title={`Welcome ${nickname || 'User'}`} />
+      <LogoutButton handleLogout={handleLogout} />
+    </Appbar.Header>
+
+    <View style={globalStyles.swiperContainer}>
+      <Swiper
+        autoplay={true}
+        showsPagination={false}
+        showsButtons={true}
+        style={globalStyles.swiper}
       >
-        <KeyboardAvoidingView
-          behavior="height"
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <View style={{ height: '75%', width: '90%', backgroundColor: '#FFB7D5', borderRadius: 20, padding: 20, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>What do you want to change about {selectedImage.name}?</Text>
-            <TextInput
-              value={selectedImageText}
-              onChangeText={setSelectedImageText}
-              onEndEditing={() => handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText)}
-              placeholder="Enter image text"
-              style={{ width: '80%', padding: 10, borderWidth: 1, borderRadius: 5, marginTop: 10 }}
-            />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', marginTop: 10 }}>
-              <Text>Display in Fun Stuff:</Text>
-              <Switch
-                value={selectedImageDisplayFunStuff}
-                onValueChange={setSelectedImageDisplayFunStuff}
-              />
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', marginTop: 10 }}>
-              <Text>Display in User Gallery:</Text>
-              <Switch
-                value={selectedImageDisplayUserGallery}
-                onValueChange={setSelectedImageDisplayUserGallery}
-              />
-            </View>
-            <TouchableOpacity style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }} onPress={() => {
-              handleChooseImage(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageDisplayFunStuff, selectedImageDisplayUserGallery, selectedImageText);
-              handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText);
-            }}>
-              <Text>Choose a new image.</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }} onPress={() => handleDeleteImage(selectedImage.name.split(' ').join('').toLowerCase())}>
-              <Text>Delete this image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: '#D3D3D3', borderRadius: 10, padding: 10, margin: 10 }} onPress={handleModalClose}>
-              <Text>I'm done.</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+        {[
+          { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
+          { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
+          { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
+          { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
+        ].map((image, index) => (
+          <TouchableOpacity
+            key={index}
+            style={globalStyles.swiperItem}
+            onPress={() => handleImagePress(image.uri, image.name)}
+          >
+            <Text>{image.name}</Text>
+            {image.uri ? (
+              <Image source={{ uri: image.uri }} style={globalStyles.imageContainer} />
+            ) : (
+              <View style={globalStyles.noImageContainer}>
+                <Text>No Image</Text>
+              </View>
+            )}
+            <Text>{image.text}</Text>
+          </TouchableOpacity>
+        ))}
+      </Swiper>
+      
+      <TouchableOpacity
+        onPress={() => navigation.navigate('MoodTracker')}
+        style={globalStyles.button}
+      >
+        <Text>Go to Mood Tracker</Text>
+      </TouchableOpacity>
     </View>
-  );
+
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={handleModalClose}
+    >
+      <KeyboardAvoidingView
+        behavior="height"
+        style={globalStyles.centeredView}
+      >
+        <View style={globalStyles.modalView}>
+          <Text>What do you want to change about {selectedImage.name}?</Text>
+          <TextInput
+            value={selectedImageText}
+            onChangeText={setSelectedImageText}
+            onEndEditing={() => handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText)}
+            placeholder="Enter image text"
+            style={globalStyles.textInput}
+          />
+          <View style={globalStyles.switchRow}>
+            <Text>Display in Fun Stuff:</Text>
+            <Switch
+              value={selectedImageDisplayFunStuff}
+              onValueChange={setSelectedImageDisplayFunStuff}
+            />
+          </View>
+          <View style={globalStyles.switchRow}>
+            <Text>Display in User Gallery:</Text>
+            <Switch
+              value={selectedImageDisplayUserGallery}
+              onValueChange={setSelectedImageDisplayUserGallery}
+            />
+          </View>
+          <TouchableOpacity style={globalStyles.button} onPress={() => {
+            handleChooseImage(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageDisplayFunStuff, selectedImageDisplayUserGallery, selectedImageText);
+            handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText);
+          }}>
+            <Text>Choose a new image.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={globalStyles.button} onPress={() => handleDeleteImage(selectedImage.name.split(' ').join('').toLowerCase())}>
+            <Text>Delete this image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={globalStyles.button} onPress={handleModalClose}>
+            <Text>I'm done.</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  </View>
+);
 };
+
 export default UserScreen;
   

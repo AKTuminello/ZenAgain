@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import MusicPlayer from '../components/FunStuffScreenComponents/MusicPlayer';
 import BlendMenu from '../components/FunStuffScreenComponents/BlendMenu';
-import { FAB, Appbar } from 'react-native-paper';
+import { FAB, Appbar, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import { globalStyles } from '../assets/globalStyles';
 import { onSnapshot } from 'firebase/firestore';
@@ -17,6 +17,7 @@ const FunStuffScreen = () => {
   const [funImages, setFunImages] = useState([]);
   const [swiperImages, setSwiperImages] = useState([]);
   const [fullScreenImage, setFullScreenImage] = useState(null);
+  const { colors } = useTheme();
   
 
   useEffect(() => {
@@ -104,22 +105,27 @@ const FunStuffScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.Content title="Enhancements" />
+    <View style={globalStyles.container}>
+      <Appbar.Header style={{ backgroundColor: colors.primary }}>
+        <Appbar.Content
+          title="Enhancements"
+          titleStyle={{ 
+            color: colors.text, 
+            ...globalStyles.appbarTitle,
+          }}
+        />
         <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
       </Appbar.Header>
-
+  
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
-
+  
       <View style={{ height: '55%' }}>
         <Swiper 
           autoplay={false} 
           showsPagination={false} 
           showsButtons={true} 
-          nextButton={<Text style={styles.buttonText}>Next</Text>}
-          prevButton={<Text style={styles.buttonText}>Prev</Text>}
-          style={{ backgroundColor: '#FFD1DC' }}
+          nextButton={<Text style={globalStyles.buttonText}>Next</Text>}
+          prevButton={<Text style={globalStyles.buttonText}>Prev</Text>}
         >
           {swiperImages.map((image, index) => (
             <TouchableOpacity 
@@ -135,11 +141,10 @@ const FunStuffScreen = () => {
         </Swiper>
         <Text style={globalStyles.instructionsText}>Instructions for use:</Text>
         <Text style={globalStyles.instructionsText}>Choose a blend from the menu.</Text>
-<Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
-<Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
-
+        <Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
+        <Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
       </View>
-
+  
       <Modal
         animationType="slide"
         transparent={false}
@@ -151,7 +156,7 @@ const FunStuffScreen = () => {
           <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
         </View>
       </Modal>
-
+  
       <Modal
         animationType="slide"
         transparent={false}
@@ -159,13 +164,13 @@ const FunStuffScreen = () => {
         onRequestClose={() => setModalVisible(false)}
       >
         {selectedBlend && (
-          <View style={styles.centeredView}>
-            <Text style={styles.modalText}>{selectedBlend.name}</Text>
-            <Text style={styles.modalText}>{selectedBlend.oildescription}</Text>
+          <View style={globalStyles.centeredView}>
+            <Text style={globalStyles.modalText}>{selectedBlend.name}</Text>
+            <Text style={globalStyles.modalText}>{selectedBlend.oildescription}</Text>
             {selectedBlend.ingredients.map((ingredient, index) => (
-              <Text key={index} style={styles.modalText}>{ingredient}</Text>
+              <Text key={index} style={globalStyles.modalText}>{ingredient}</Text>
             ))}
-            <FAB icon="close" onPress={() => setModalVisible(false)} style={styles.closeButton} />
+            <FAB icon="close" onPress={() => setModalVisible(false)} style={globalStyles.closeButton} />
           </View>
         )}
       </Modal>
@@ -173,32 +178,5 @@ const FunStuffScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: '#f0f0f0',
-    padding: 0,
-  },
-  buttonText: {
-    color: '#000',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    fontSize: 24,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-  },
-});
-
 export default FunStuffScreen;
+  

@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, Image, StyleSheet, Text, TouchableHighlight, Modal, Dimensions, Button } from 'react-native';
+import { View, FlatList, Image, StyleSheet, Text, TouchableHighlight, Modal, Dimensions, TouchableOpacity, Button } from 'react-native';
 import { collection, getDocs, doc, setDoc, arrayUnion, getDoc, arrayRemove } from '@firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { AuthContext } from '../AuthContext.jsx';
 import { Appbar } from 'react-native-paper';
 import { globalStyles } from '../assets/globalStyles';
+import { onSnapshot } from '@firebase/firestore';
+import Swiper from 'react-native-swiper';
 
 const { width } = Dimensions.get('window');
 
@@ -97,32 +99,33 @@ const UserGalleryScreen = () => {
     setModalVisible(false);
     setModalImage(null);
   };
-
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <Appbar.Header>
         <Appbar.Content title="User Gallery" />
       </Appbar.Header>
-      <FlatList
-        data={images}
-        keyExtractor={item => item.url}
-        renderItem={({ item }) => (
-          <TouchableHighlight onPress={() => handleOpenModal(item)}>
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: item.url }} style={styles.image} />
-              {item.nickname && <Text>{item.nickname}</Text>}
-              {item.text ? <Text>{item.text}</Text> : <Text>No text provided</Text>}
-              <Button title={likes.includes(item.url) ? "Unlike" : "Like"} onPress={() => handleLikeImage(item.url)} />
-              <Text>Likes: {likes.filter(like => like === item.url).length}</Text>
-              <Button title="Add Friend" onPress={() => addFriend({ nickname: item.nickname })} />
-            </View>
-          </TouchableHighlight>
-        )}
-      />
+      <Swiper autoplay={false} showsPagination={false} showsButtons={true}>
+        {images.map((item, index) => (
+          <View key={index} style={globalStyles.swiperItem}>
+            <TouchableHighlight onPress={() => handleOpenModal(item)}>
+              <Image source={{ uri: item.url }} style={globalStyles.imageContainer} />
+            </TouchableHighlight>
+            {item.nickname && <Text>{item.nickname}</Text>}
+            {item.text ? <Text>{item.text}</Text> : <Text>No text provided</Text>}
+            <TouchableOpacity style={globalStyles.button} onPress={() => handleLikeImage(item.url)}>
+              <Text>{likes.includes(item.url) ? "Unlike" : "Like"}</Text>
+            </TouchableOpacity>
+            <Text style={globalStyles.text}>Likes: {likes.filter(like => like === item.url).length}</Text>
+            <TouchableOpacity style={globalStyles.button} onPress={() => addFriend({ nickname: item.nickname })}>
+              <Text>Add Friend</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </Swiper>
       <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={handleCloseModal}>
-        <View style={styles.centeredView}>
-          <TouchableHighlight onPress={handleCloseModal} style={styles.modalTouchable}>
-            <Image source={{ uri: modalImage?.url }} style={styles.modalImage} />
+        <View style={globalStyles.centeredView}>
+          <TouchableHighlight onPress={handleCloseModal} style={globalStyles.modalTouchable}>
+            <Image source={{ uri: modalImage?.url }} style={globalStyles.modalImage} />
           </TouchableHighlight>
         </View>
       </Modal>
@@ -130,13 +133,5 @@ const UserGalleryScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  imageContainer: { flex: 1, flexDirection: 'column', margin: 1, borderWidth: 2, borderColor: '#000' },
-  image: { height: width / 2, aspectRatio: 1 },
-  centeredView: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.8)" },
-  modalTouchable: { width: '90%', height: '70%', alignItems: 'center', justifyContent: 'center' },
-  modalImage: { width: '100%', height: '100%', resizeMode: 'contain' },
-});
-
 export default UserGalleryScreen;
+
