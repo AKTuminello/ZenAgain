@@ -112,7 +112,7 @@ const FunStuffScreen = () => {
 
       <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
-      <View style={{ height: '54%' }}>
+      <View style={{ height: '55%' }}>
         <Swiper 
           autoplay={false} 
           showsPagination={false} 
@@ -133,9 +133,11 @@ const FunStuffScreen = () => {
             </TouchableOpacity>
           ))}
         </Swiper>
-        <Text>To use the above: choose a blend from the menu.</Text>
-        <Text>Adjust your volume--or turn the music off.</Text>
-        <Text>Tap the picture to make it larger and use it as a focal point.</Text>
+        <Text style={globalStyles.instructionsText}>Instructions for use:</Text>
+        <Text style={globalStyles.instructionsText}>Choose a blend from the menu.</Text>
+<Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
+<Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
+
       </View>
 
       <Modal

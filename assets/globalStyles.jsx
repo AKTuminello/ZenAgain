@@ -1,12 +1,38 @@
 import { StyleSheet } from 'react-native';
 
+const themeColors = {
+  primary: '#bee4ed',
+  accent: '#49176e',
+  background: '#aea1d0',
+  surface: '#265ef7',
+  text: '#00525e',
+  error: '#a4b4be',
+};
+
+const themeFonts = {
+  regular: {
+    fontFamily: 'JosefinSans-VariableFont_wght',
+    fontWeight: 'normal',
+  },
+  italic: {
+    fontFamily: 'JosefinSans-Italic',
+    fontStyle: 'italic',
+  },
+};
+
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DAE8DA', 
+    backgroundColor: themeColors.background,
   },
   text: {
-    color: '#A99F97',  
+    color: themeColors.text,
+  },
+  instructionsText: {
+    color: themeColors.text,
+    fontFamily: themeFonts.italic.fontFamily,
+    fontStyle: themeFonts.italic.fontStyle,
+    textAlign: 'center',
   },
   centeredView: {
     flex: 1,
@@ -55,6 +81,4 @@ export const globalStyles = StyleSheet.create({
     height: 200,
     resizeMode: 'cover',
   },
-  
-  
 });

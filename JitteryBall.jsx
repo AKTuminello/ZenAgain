@@ -93,8 +93,8 @@ const JitteryBall = ({ onComplete }) => {
           styles.text,
           {
             opacity: opacityAnim,
-            top: screenHeight / 2 +20 , // Adjust based on your preference
-            left: screenWidth / 2 - 145, // Adjust based on your preference
+            top: screenHeight / 2 + 20,
+            left: screenWidth / 2 - 145,
           }
         ]}
       >
@@ -117,7 +117,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 42,
     position: 'absolute',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'JosefinSans-BoldItalic',
+    color: '#e30b5d',
   }
 });
 
