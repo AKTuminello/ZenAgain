@@ -33,7 +33,7 @@ const FunStuffScreen = () => {
   const fetchFunStuffImagesFromFirestore = () => {
     const usersCollectionRef = collection(db, 'users');
   
-    // Subscribe to updates using onSnapshot
+    
     const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
       const users = querySnapshot.docs.map(doc => doc.data());
       const images = [];
