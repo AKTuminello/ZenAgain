@@ -77,7 +77,7 @@ const FunStuffScreen = () => {
             });
           }
         });
-        console.log('Fetched Images:', images);
+        
         setFunImages(images);
         setSwiperImages(images); 
       });
