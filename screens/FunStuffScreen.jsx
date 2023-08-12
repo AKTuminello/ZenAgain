@@ -18,6 +18,8 @@ const FunStuffScreen = () => {
   const [swiperImages, setSwiperImages] = useState([]);
   const [fullScreenImage, setFullScreenImage] = useState(null);
   const { colors } = useTheme();
+  const [error, setError] = useState(null);
+
   
 
   useEffect(() => {
@@ -26,56 +28,66 @@ const FunStuffScreen = () => {
   }, []);
 
   const fetchBlendsFromFirestore = async () => {
-    const querySnapshot = await getDocs(collection(db, 'OilBlends'));
-    const blends = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setBlends(blends);
+    try {
+      const querySnapshot = await getDocs(collection(db, 'OilBlends'));
+      const blends = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setBlends(blends);
+    } catch (error) {
+      console.error('Error fetching blends:', error);
+      setError('There was a problem fetching the blends. Please try again later.');
+    }
   };
 
+
   const fetchFunStuffImagesFromFirestore = () => {
-    const usersCollectionRef = collection(db, 'users');
-  
+    try {
+      const usersCollectionRef = collection(db, 'users');
     
-    const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
-      const users = querySnapshot.docs.map(doc => doc.data());
-      const images = [];
-    
-      users.forEach(user => {
-        if (user.profilePic_displayInFunStuff) {
-          images.push({ 
-            url: user.profilePic, 
-            text: user.profilePic_text, 
-            nickname: user.nickname 
-          });
-        }
-        if (user.favePic1_displayInFunStuff) {
-          images.push({ 
-            url: user.favePic1, 
-            text: user.myfavoriteimage_text, 
-            nickname: user.nickname 
-          });
-        }
-        if (user.favePic2_displayInFunStuff) {
-          images.push({ 
-            url: user.favePic2, 
-            text: user.mysecondfavorite_text, 
-            nickname: user.nickname 
-          });
-        }
-        if (user.favePic3_displayInFunStuff) {
-          images.push({ 
-            url: user.favePic3, 
-            text: user.mythirdfavorite_text, 
-            nickname: user.nickname 
-          });
-        }
+      const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
+        const users = querySnapshot.docs.map(doc => doc.data());
+        const images = [];
+      
+        users.forEach(user => {
+          if (user.profilePic_displayInFunStuff) {
+            images.push({ 
+              url: user.profilePic, 
+              text: user.profilePic_text, 
+              nickname: user.nickname 
+            });
+          }
+          if (user.favePic1_displayInFunStuff) {
+            images.push({ 
+              url: user.favePic1, 
+              text: user.myfavoriteimage_text, 
+              nickname: user.nickname 
+            });
+          }
+          if (user.favePic2_displayInFunStuff) {
+            images.push({ 
+              url: user.favePic2, 
+              text: user.mysecondfavorite_text, 
+              nickname: user.nickname 
+            });
+          }
+          if (user.favePic3_displayInFunStuff) {
+            images.push({ 
+              url: user.favePic3, 
+              text: user.mythirdfavorite_text, 
+              nickname: user.nickname 
+            });
+          }
+        });
+        console.log('Fetched Images:', images);
+        setFunImages(images);
+        setSwiperImages(images); 
       });
-      console.log('Fetched Images:', images);
-      setFunImages(images);
-      setSwiperImages(images); 
-    });
   
-    // Return the unsubscribe function to be called on cleanup
-    return unsubscribe;
+    
+      return unsubscribe;
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      setError('There was a problem fetching the images. Please try again later.');
+    }
   };
   
   const handleBlendSelection = async (blendData) => {
@@ -106,6 +118,7 @@ const FunStuffScreen = () => {
 
   return (
     <View style={globalStyles.container}>
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <Appbar.Header style={{ backgroundColor: colors.primary }}>
         <Appbar.Content
           title="Enhancements"
@@ -130,11 +143,13 @@ const FunStuffScreen = () => {
           {swiperImages.map((image, index) => (
             <TouchableOpacity 
               key={index} 
+              accessible
+              accessibilityLabel={`Image of ${image.nickname}`}
               style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
               onPress={() => handleImagePress(image.url)}
             >
               <Text>{image.nickname}</Text>
-              <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} />
+              <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} accessible accessibilityLabel={`Image of ${image.nickname}`} onError={(e) => console.log('Image loading error:', e)} />
               <Text>{image.text}</Text>
             </TouchableOpacity>
           ))}
