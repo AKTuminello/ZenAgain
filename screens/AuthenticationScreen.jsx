@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
-import { View, Alert, Image, Dimensions, TouchableOpacity, Text, TextInput } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from '@firebase/auth';
+import { View, Alert, Image, Dimensions } from 'react-native';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
 import { getFirestore, doc, setDoc } from '@firebase/firestore';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -41,7 +41,7 @@ const AuthenticationScreen = () => {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         authContext.setIsLoggedIn(true);
-        navigation.navigate('User');
+        navigation.navigate('My Stuff');
       } else {
         if (nickname.length < 3) {
           Alert.alert('Error', 'Nickname should be at least 3 characters long');
@@ -59,7 +59,7 @@ const AuthenticationScreen = () => {
         const userDocRef = doc(db, 'users', user.uid);
         await setDoc(userDocRef, { email, nickname });
         authContext.setIsLoggedIn(true);
-        navigation.navigate('User');
+        navigation.navigate('My Stuff');
       }
     } catch (error) {
       const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
@@ -83,50 +83,49 @@ const AuthenticationScreen = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Appbar.Header>
-        <Appbar.Action icon="home" onPress={() => navigation.navigate('HomeScreen')} />
-        <Appbar.Content title="Login" />
-      </Appbar.Header>
-      {isLogin && !showForgotPassword && (
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={globalStyles.container}>
         <View>
-          <AuthInput value={email} setValue={setEmail} placeholder="Email" />
-          <AuthInput value={password} setValue={setPassword} placeholder="Password" secureTextEntry />
-          <AuthButton title="Login" onPress={handleAuth} />
-          <AuthButton title="Need to create an account?" onPress={() => setIsLogin(!isLogin)} />
-          <TouchableOpacity onPress={() => setShowForgotPassword(true)}>
-            <Text style={{ textAlign: 'center', color: '#2E5090' }}>Forgot Password?</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {showForgotPassword && (
-        <View>
-          <Text>Please enter your email address:</Text>
-          <TextInput
-            value={forgotEmail}
-            onChangeText={setForgotEmail}
+          <Appbar.Header>
+            <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
+          </Appbar.Header>
+          <AuthInput
+            value={email}
+            setValue={setEmail}
             placeholder="Email"
+            style={globalStyles.inputField}
+            onSubmitEditing={() => passwordInput.current.focus()}
+            returnKeyType="next"
           />
-          <AuthButton title="Send Password Reset Email" onPress={handleForgotPassword} />
-          <TouchableOpacity onPress={() => setShowForgotPassword(false)}>
-            <Text style={{ textAlign: 'center', color: '#2E5090' }}>Cancel</Text>
-          </TouchableOpacity>
+          <AuthInput
+            value={password}
+            setValue={setPassword}
+            placeholder="Password"
+            secureTextEntry
+            style={globalStyles.inputField}
+            ref={passwordInput}
+            onSubmitEditing={isLogin ? handleAuth : () => nicknameInput.current.focus()}
+            returnKeyType={isLogin ? "done" : "next"}
+          />
+          {!isLogin && <AuthInput
+            value={nickname}
+            setValue={setNickname}
+            placeholder="Nickname"
+            style={globalStyles.inputField}
+            ref={nicknameInput}
+            onSubmitEditing={handleAuth}
+            returnKeyType="done"
+          />}
+          {isLogin ? <AuthButton title="Login" onPress={handleAuth} /> : <AuthButton title="Create Account" onPress={handleAuth} />}
+          <AuthButton title={isLogin ? 'Need to create an account?' : 'Already have an account?'} onPress={() => setIsLogin(!isLogin)} />
         </View>
-      )}
-      {!isLogin && (
-        <View>
-          <AuthInput value={nickname} setValue={setNickname} placeholder="Nickname" />
-          <AuthInput value={email} setValue={setEmail} placeholder="Email" />
-          <AuthInput value={password} setValue={setPassword} placeholder="Password" secureTextEntry />
-          <AuthButton title="Create Account" onPress={handleAuth} />
-          <AuthButton title="Already have an account?" onPress={() => setIsLogin(!isLogin)} />
+        <View style={{ alignItems: 'center' }}>
+          <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} />
         </View>
-      )}
-      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center' }}>
-        <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} />
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 export default AuthenticationScreen;
+  

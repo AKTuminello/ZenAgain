@@ -8,7 +8,7 @@ const LogoutButton = ({ handleLogout }) => {
       onPress={handleLogout}
       mode="contained"
       style={{ marginVertical: 10, backgroundColor: '#300040' }} // Background color for the button
-      labelStyle={{ color: '#FFFFFF' }} // White color for the text
+      labelStyle={{ color: '#FFFFFF' }} 
     >
       Logout
     </Button>
