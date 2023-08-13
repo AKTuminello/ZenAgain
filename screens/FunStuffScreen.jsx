@@ -128,7 +128,7 @@ const FunStuffScreen = () => {
         {error && <Text style={{ color: 'red' }}>{error}</Text>}
         <Appbar.Header style={{ backgroundColor: colors.primary }}>
           <Appbar.Content
-            title="Enhancements"
+            title="Resources"
             titleStyle={{ 
               color: colors.text, 
               ...globalStyles.appbarTitle,
@@ -178,17 +178,13 @@ const FunStuffScreen = () => {
       <Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
       <Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
       <Text style={globalStyles.instructionsText}>Breathe deeply and enjoy!</Text>
-      <Text style={globalStyles.instructionsText}>Some of our users have also shared their favorites.</Text>
+      <Text style={globalStyles.instructionsText}>Some of our users have also shared their favorites pictures.</Text>
       <Text style={globalStyles.instructionsText}>Keep in mind that binaural beats will change your current mental state.</Text>
       <Text style={globalStyles.instructionsText}>Use only in safe situations.</Text>
     <FAB icon="close" onPress={() => setInstructionsModalVisible(false)} style={globalStyles.closeButton} />
   </View>
 </Modal>
-
-      </View>
-
-
-  
+      </View>  
         <Modal
           animationType="slide"
           transparent={false}
@@ -199,8 +195,7 @@ const FunStuffScreen = () => {
             <Image source={{ uri: fullScreenImage }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
             <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
           </View>
-        </Modal>
-  
+        </Modal>  
         <Modal
           animationType="slide"
           transparent={false}
