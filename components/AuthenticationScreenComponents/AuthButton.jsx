@@ -1,9 +1,13 @@
 import React from 'react';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 
 const AuthButton = ({ onPress, title }) => {
   return (
-    <Button onPress={onPress}>
+    <Button
+      onPress={onPress}
+      style={{ backgroundColor: '#300040', borderRadius: 10, padding: 10, margin: 10 }}
+      labelStyle={{ color: '#FFFFFF', textAlign: 'center' }}
+    >
       {title}
     </Button>
   );
