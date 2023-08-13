@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, FlatList, ScrollView, SafeAreaView} from 'react-native';
+import React, { useState, useContext, useEffect, memo } from 'react';
+import { View, Text, TouchableOpacity, TextInput, FlatList, ScrollView } from 'react-native';
 import { AuthContext } from '../AuthContext';
 import { getFirestore, addDoc, Timestamp, query, where, collection, orderBy } from '@firebase/firestore';
 import { globalStyles } from '../assets/globalStyles';
@@ -7,13 +7,13 @@ import { useTheme } from 'react-native-paper';
 import { onSnapshot } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const MoodTrackerScreen = () => {
+const MoodTrackerScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [mood, setMood] = useState(null);
   const [customMood, setCustomMood] = useState('');
   const [journalEntry, setJournalEntry] = useState('');
   const [weeklyEntries, setWeeklyEntries] = useState([]);
-  const { fonts } = useTheme();
+  const { fonts, colors } = useTheme();
   const [showCustomMoodInput, setShowCustomMoodInput] = useState(false);
 
   const moodOptions = [
@@ -29,50 +29,64 @@ const MoodTrackerScreen = () => {
     { mood: 'Custom', color: '#FF9cce' },
   ];
 
-  const addOrUpdateJournalEntry = async (mood) => {
+  useEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: '#bee4ed',
+      },
+      headerTintColor: '#000000',
+      headerTitle: "MoodTracker",
+    });
+  }, [navigation]);
+
+  const ListItem = memo(({ item }) => (
+    <View style={{ marginVertical: 10 }}>
+      <Text style={globalStyles.text}>Date: {item.date.toDate().toLocaleDateString()}</Text>
+      <Text style={globalStyles.instructionsText}>Mood: {item.mood}</Text>
+      <Text style={globalStyles.text}>Entry: {item.entry}</Text>
+    </View>
+  ));
+
+  const ListHeader = memo(() => (
+    <Text style={[globalStyles.text, { fontSize: 18, marginVertical: 10 }]}>Recent Entries:</Text>
+  ));
+
+  const addOrUpdateJournalEntry = async (selectedMood) => {
     if (!user) return;
-  
-    const selectedMood = mood !== 'Custom' ? mood : customMood;
-    console.log("Selected mood:", selectedMood); // Log selected mood
-  
+
     const db = getFirestore();
     const journalCollectionRef = collection(db, 'users', user.uid, 'journalEntries');
-  
+
     await addDoc(journalCollectionRef, {
       date: Timestamp.fromDate(new Date()),
-      mood: selectedMood,
+      mood: selectedMood !== 'Custom' ? selectedMood : customMood,
       entry: journalEntry,
     });
   };
-  
 
   const handleMoodSelect = (selectedMood) => {
     if (selectedMood === 'Custom') {
       setShowCustomMoodInput(true);
     } else {
       setMood(selectedMood);
+      addOrUpdateJournalEntry(selectedMood);
     }
   };
 
   const handleCustomMoodInput = (text) => {
-    console.log("Handling custom mood input:", text); // Log custom mood input
     setCustomMood(text);
     if (text.endsWith('\n')) {
       handleCustomMoodSubmit();
     }
   };
-  
-  
 
   const handleCustomMoodSubmit = async () => {
     if (customMood.trim() === '') return;
-    console.log("Submitting custom mood:", customMood); // Log custom mood
     await addOrUpdateJournalEntry(customMood);
     setShowCustomMoodInput(false);
     setCustomMood('');
     setMood(null);
   };
-  
 
   const handleJournalEntryInput = async (text) => {
     setJournalEntry(text);
@@ -96,7 +110,6 @@ const MoodTrackerScreen = () => {
       console.log("Weekly entries from database:", results); // Log weekly entries
       setWeeklyEntries(results);
     });
-    
 
     return () => unsubscribe();
   }, [user]);
@@ -114,32 +127,29 @@ const MoodTrackerScreen = () => {
   );
 
   const renderHeader = () => (
-    <View>
-      <View style={{ alignItems: 'center', marginVertical: 10 }}>
-        <Text style={{ fontSize: 18, fontFamily: fonts.regular.fontFamily, color: '#49176e' }}>Mood Tracker Screen</Text>
-      </View>
+    <View style={{ alignItems: 'center', marginVertical: 10 }}>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>{renderMoodButtons()}</View>
       {showCustomMoodInput && (
-  <View>
-    <Text>How you feelin'?:</Text>
-    <TextInput
-  value={customMood}
-  onChangeText={text => setCustomMood(text.replace('\n', ''))}
-  onSubmitEditing={handleCustomMoodSubmit}
-  placeholder="I'm feeling..."
-  returnKeyType="done"
-/>
-
-  </View>
-)}
+        <View>
+          <Text style={globalStyles.instructionsText}>How you feelin'?:</Text>
+          <TextInput
+            style={globalStyles.inputField}
+            value={customMood}
+            onChangeText={text => setCustomMood(text.replace('\n', ''))}
+            onSubmitEditing={handleCustomMoodSubmit}
+            placeholder="I'm feeling..."
+            returnKeyType="done"
+          />
+        </View>
+      )}
       <ScrollView style={{ marginVertical: 10 }} keyboardShouldPersistTaps="handled">
         <TextInput
+          style={globalStyles.inputField}
           value={journalEntry}
           onChangeText={handleJournalEntryInput}
           placeholder="Write your journal entry here..."
           multiline
           returnKeyType="done"
-          style={{ minHeight: 100, borderWidth: 1, borderRadius: 5, padding: 10 }}
         />
       </ScrollView>
     </View>
@@ -151,20 +161,22 @@ const MoodTrackerScreen = () => {
       keyExtractor={(item) => item.date.toDate().toString()}
       renderItem={({ item }) => (
         <View style={{ marginVertical: 10 }}>
-          <Text>Date: {item.date.toDate().toLocaleDateString()}</Text>
-          <Text>Mood: {item.mood}</Text>
-          <Text>Entry: {item.entry}</Text>
+          <Text style={globalStyles.text}>Date: {item.date.toDate().toLocaleDateString()}</Text>
+          <Text style={globalStyles.instructionsText}>Mood: {item.mood}</Text>
+          <Text style={globalStyles.text}>Entry: {item.entry}</Text>
         </View>
       )}
-      ListHeaderComponent={<Text style={{ fontSize: 18, marginVertical: 10 }}>Recent Entries:</Text>}
+      ListHeaderComponent={<Text style={[globalStyles.text, { fontSize: 18, marginVertical: 10 }]}>Recent Entries:</Text>}
     />
   );
 
   return (
-    <View style={globalStyles.container}>
-      {renderHeader()}
-      {renderWeeklyEntries()}
-    </View>
+    <LinearGradient colors={['#bbe4ed', '#aea1d0', '#49176e']} style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        {renderHeader()}
+        {renderWeeklyEntries()}
+      </View>
+    </LinearGradient>
   );
 };
 

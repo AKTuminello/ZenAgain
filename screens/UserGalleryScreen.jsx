@@ -8,6 +8,8 @@ import { globalStyles } from '../assets/globalStyles';
 import { onSnapshot } from '@firebase/firestore';
 import Swiper from 'react-native-swiper';
 import { LinearGradient } from 'expo-linear-gradient';
+import leftfacing from '../assets/leftfacing.png';
+import rightfacing from '../assets/rightfacing.png';
 
 const { width } = Dimensions.get('window');
 
@@ -109,37 +111,41 @@ const UserGalleryScreen = () => {
            title="Gallery"
            titleStyle={{ 
             color: '#2E5090',
+            fontSize: 30,
             ...globalStyles.appbarTitle,
           }}/>
         </Appbar.Header>
       </LinearGradient>
-      <Swiper autoplay={false} showsPagination={false} showsButtons={true}>
-        {images.map((item, index) => (
-          <View key={index} style={globalStyles.swiperItem}>
-            <TouchableHighlight onPress={() => handleOpenModal(item)}>
-              <Image source={{ uri: item.url }} style={globalStyles.imageContainer} />
-            </TouchableHighlight>
-            {item.nickname && <Text>{item.nickname}</Text>}
-            {item.text ? <Text>{item.text}</Text> : <Text>No text provided</Text>}
-            <TouchableOpacity style={globalStyles.button} onPress={() => handleLikeImage(item.url)}>
-              <Text>{likes.includes(item.url) ? "Unlike" : "Like"}</Text>
-            </TouchableOpacity>
-            <Text style={globalStyles.text}>Likes: {likes.filter(like => like === item.url).length}</Text>
-            <TouchableOpacity style={globalStyles.button} onPress={() => addFriend({ nickname: item.nickname })}>
-              <Text>Add Friend</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </Swiper>
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={handleCloseModal}>
-        <View style={globalStyles.centeredView}>
-          <TouchableHighlight onPress={handleCloseModal} style={globalStyles.modalTouchable}>
-            <Image source={{ uri: modalImage?.url }} style={globalStyles.modalImage} />
-          </TouchableHighlight>
-        </View>
-      </Modal>
-      </LinearGradient>
-    </SafeAreaView>
+      <Swiper autoplay={false} showsPagination={false} showsButtons={true}
+      nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
+      prevButton={<Image source={leftfacing} style={{ width: 50, height: 50}} />}>
+      {images.map((item, index) => (
+  <View key={index} style={globalStyles.swiperItem}>
+    <TouchableHighlight onPress={() => handleOpenModal(item)}>
+      <Image source={{ uri: item.url }} style={globalStyles.imageContainer} />
+    </TouchableHighlight>
+    {item.nickname && <Text>{item.nickname}</Text>}
+    {item.text ? <Text>{item.text}</Text> : <Text>No text provided</Text>}
+    <TouchableOpacity style={globalStyles.button} onPress={() => handleLikeImage(item.url)}>
+      <Text style={globalStyles.buttonText}>{likes.includes(item.url) ? "Unlike" : "Like"}</Text>
+    </TouchableOpacity>
+    <Text style={globalStyles.buttonText}>Likes: {likes.filter(like => like === item.url).length}</Text>
+    <TouchableOpacity style={globalStyles.button} onPress={() => addFriend({ nickname: item.nickname })}>
+      <Text style={globalStyles.buttonText}>Add Friend</Text>
+    </TouchableOpacity>
+  </View>
+))}
+</Swiper>
+<Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={handleCloseModal}>
+  <View style={globalStyles.centeredView}>
+    <TouchableHighlight onPress={handleCloseModal} style={globalStyles.modalTouchable}>
+      <Image source={{ uri: modalImage?.url }} style={globalStyles.modalImage} />
+    </TouchableHighlight>
+  </View>
+</Modal>
+</LinearGradient>
+</SafeAreaView>
+
 
   );
 };

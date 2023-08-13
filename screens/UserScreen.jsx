@@ -15,6 +15,8 @@ import { onSnapshot, updateDoc } from '@firebase/firestore';
 import { KeyboardAvoidingView } from 'react-native';
 import { globalStyles } from '../assets/globalStyles';
 import { LinearGradient } from 'expo-linear-gradient';
+import leftfacing from '../assets/leftfacing.png';
+import rightfacing from '../assets/rightfacing.png';
 
 
 import HomeScreen from './HomeScreen';
@@ -359,6 +361,8 @@ const UserScreen = ({ navigation }) => {
           autoplay={true}
           showsPagination={false}
           showsButtons={true}
+          nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
+            prevButton={<Image source={leftfacing} style={{ width: 50, height: 50}} />}
           style={globalStyles.swiper}
         >
         {[

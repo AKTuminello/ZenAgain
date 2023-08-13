@@ -9,6 +9,9 @@ import Swiper from 'react-native-swiper';
 import { globalStyles } from '../assets/globalStyles';
 import { onSnapshot } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
+import leftfacing from '../assets/leftfacing.png';
+import rightfacing from '../assets/rightfacing.png';
+
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
@@ -20,6 +23,8 @@ const FunStuffScreen = () => {
   const [fullScreenImage, setFullScreenImage] = useState(null);
   const { colors } = useTheme();
   const [error, setError] = useState(null);
+  const [instructionsModalVisible, setInstructionsModalVisible] = useState(false);
+
 
   
 
@@ -139,8 +144,8 @@ const FunStuffScreen = () => {
   autoplay={false} 
   showsPagination={false} 
   showsButtons={true} 
-  nextButton={<Text style={globalStyles.buttonText}>{"Next"}</Text>}
-  prevButton={<Text style={globalStyles.buttonText}>{"Prev"}</Text>}
+  nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
+            prevButton={<Image source={leftfacing} style={{ width: 50, height: 50}} />}
 >
   {swiperImages.map((image, index) => (
     <TouchableOpacity 
@@ -156,13 +161,31 @@ const FunStuffScreen = () => {
     </TouchableOpacity>
   ))}
 </Swiper>
-      <Text style={globalStyles.instructionsText}>Instructions for use:</Text>
+<TouchableOpacity onPress={() => setInstructionsModalVisible(true)} style={globalStyles.button}>
+  <Text style={globalStyles.buttonText}>Show Instructions</Text>
+</TouchableOpacity>
+
+<Modal
+  animationType="slide"
+  transparent={false}
+  visible={instructionsModalVisible}
+  onRequestClose={() => setInstructionsModalVisible(false)}
+>
+  <View style={globalStyles.centeredView}>
+    <Text style={globalStyles.modalText}>Instructions for use:</Text>
+    <Text style={globalStyles.instructionsText}>Instructions for use:</Text>
       <Text style={globalStyles.instructionsText}>Choose a blend from the menu.</Text>
       <Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
       <Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
       <Text style={globalStyles.instructionsText}>Breathe deeply and enjoy!</Text>
       <Text style={globalStyles.instructionsText}>Some of our users have also shared their favorites.</Text>
-    </View>
+      <Text style={globalStyles.instructionsText}>Keep in mind that binaural beats will change your current mental state.</Text>
+      <Text style={globalStyles.instructionsText}>Use only in safe situations.</Text>
+    <FAB icon="close" onPress={() => setInstructionsModalVisible(false)} style={globalStyles.closeButton} />
+  </View>
+</Modal>
+
+      </View>
 
 
   

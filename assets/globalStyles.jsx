@@ -18,7 +18,8 @@ export const globalStyles = StyleSheet.create({
     padding: 0,
   },
   buttonText: {
-    color: '#300040',
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
   swiperContainer: {
     height: '75%',
@@ -47,6 +48,26 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  modalText: {
+    fontSize: 24, 
+    color: '#300040',
+    marginBottom: 15, 
+    textAlign: 'center',
+  },
+  instructionsText: {
+    fontSize: 18, 
+    color: '#300040',
+    fontFamily: 'JosefinSans-Italic', 
+    fontStyle: 'italic',
+    textAlign: 'center', 
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+  },
+
   modalTextInput: {
     width: '80%',
     padding: 10,
@@ -98,17 +119,12 @@ export const globalStyles = StyleSheet.create({
   },
   instructionsText: {
     color: themeColors.text,
-    fontFamily: 'JosefinSans-Italic', // Assuming italic style
+    fontFamily: 'JosefinSans-Italic', 
     fontStyle: 'italic',
     textAlign: 'center',
   },
 
-  closeButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-  },
-
+  
   appbarTitle: {
     fontWeight: 'bold',
     fontSize: 24,
@@ -127,17 +143,26 @@ export const globalStyles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     fontFamily:  'JosefinSans-SemiBoldItalic',
-    color: '#235090', 
+    color: '#FC4483', 
     marginBottom: 10,
   },
 
   inputField: {
-    backgroundColor: '#FFFFFF', // white background
+    backgroundColor: '#FFFFFF', 
     borderColor: '#300040', 
     borderWidth: 1, 
     borderRadius: 5, 
     paddingHorizontal: 10, 
     fontSize: 16,
+  },
+
+  buttonContainer: {
+    backgroundColor: '#300040',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    alignItems: 'center'
+
   },
 
   });
