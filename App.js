@@ -137,7 +137,7 @@ const UserStackScreen = () => (
 const UserNavigator = () => {
   return (
     <MainTab.Navigator
-      barStyle={{ backgroundColor: '#49176e' }} // The final color in the linear gradient
+      barStyle={{ backgroundColor: '#49176e' }}
       activeColor="#FFFFFF" 
       inactiveColor="#FFFFFF" 
     >

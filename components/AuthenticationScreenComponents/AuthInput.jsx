@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { TextInput, StyleSheet } from 'react-native'; // Removed Button
+import { TextInput, StyleSheet } from 'react-native';
 
 const AuthInput = forwardRef(({ value, setValue, placeholder, secureTextEntry = false, onSubmitEditing = null }, ref) => {
   return (
@@ -14,6 +14,7 @@ const AuthInput = forwardRef(({ value, setValue, placeholder, secureTextEntry = 
       returnKeyType="next"
       blurOnSubmit={false}
       ref={ref}
+      accessibilityLabel={placeholder}
     />
   );
 });
