@@ -61,6 +61,8 @@ const UserScreen = ({ navigation }) => {
   const [selectedImageDisplayFunStuff, setSelectedImageDisplayFunStuff] = useState(false);
   const [selectedImageDisplayUserGallery, setSelectedImageDisplayUserGallery] = useState(false);
   const [selectedImageText, setSelectedImageText] = useState('');
+  const { setIsLoggedIn, setUser } = useContext(AuthContext);
+
 
   useEffect(() => {
     if (user) {
@@ -84,6 +86,8 @@ const UserScreen = ({ navigation }) => {
 
   const handleLogout = async () => {
     await signOut(auth);
+    setIsLoggedIn(false); 
+    setUser(null); 
   };
 
   const uriToBlob = (uri) => {

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { View, Alert, Image, Dimensions } from 'react-native';
+import { View, Alert, Image, Dimensions, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
 import { getFirestore, doc, setDoc } from '@firebase/firestore';
 import { AuthContext } from '../AuthContext';
@@ -27,7 +27,7 @@ const AuthenticationScreen = () => {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         authContext.setIsLoggedIn(true);
-        navigation.navigate('User');
+        navigation.navigate('My Stuff');
       } else {
         if (nickname.length < 3) {
           Alert.alert('Error', 'Nickname should be at least 3 characters long');
@@ -45,7 +45,7 @@ const AuthenticationScreen = () => {
         const userDocRef = doc(db, 'users', user.uid);
         await setDoc(userDocRef, { email, nickname });
         authContext.setIsLoggedIn(true);
-        navigation.navigate('User');
+        navigation.navigate('My Stuff');
       }
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -53,45 +53,49 @@ const AuthenticationScreen = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <View style={{ flex: 1 }}>
-        <Appbar.Header>
-          <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
-        </Appbar.Header>
-        <AuthInput
-          value={email}
-          setValue={setEmail}
-          placeholder="Email"
-          style={globalStyles.inputField}
-          onSubmitEditing={() => passwordInput.current.focus()}
-          returnKeyType="next"
-        />
-        <AuthInput
-          value={password}
-          setValue={setPassword}
-          placeholder="Password"
-          secureTextEntry
-          style={globalStyles.inputField}
-          ref={passwordInput}
-          onSubmitEditing={isLogin ? handleAuth : () => nicknameInput.current.focus()}
-          returnKeyType={isLogin ? "done" : "next"}
-        />
-        {!isLogin && <AuthInput
-          value={nickname}
-          setValue={setNickname}
-          placeholder="Nickname"
-          style={globalStyles.inputField}
-          ref={nicknameInput}
-          onSubmitEditing={handleAuth}
-          returnKeyType="done"
-        />}
-        {isLogin ? <AuthButton title="Login" onPress={handleAuth} /> : <AuthButton title="Create Account" onPress={handleAuth} />}
-        <AuthButton title={isLogin ? 'Need to create an account?' : 'Already have an account?'} onPress={() => setIsLogin(!isLogin)} />
-      </View>
-      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center' }}>
-        <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} />
-      </View>
-    </View>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={globalStyles.container}>
+        <View>
+          <Appbar.Header>
+            <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
+          </Appbar.Header>
+          <AuthInput
+            value={email}
+            setValue={setEmail}
+            placeholder="Email"
+            style={globalStyles.inputField}
+            onSubmitEditing={() => passwordInput.current.focus()}
+            returnKeyType="next"
+          />
+          <AuthInput
+            value={password}
+            setValue={setPassword}
+            placeholder="Password"
+            secureTextEntry
+            style={globalStyles.inputField}
+            ref={passwordInput}
+            onSubmitEditing={isLogin ? handleAuth : () => nicknameInput.current.focus()}
+            returnKeyType={isLogin ? "done" : "next"}
+          />
+          {!isLogin && <AuthInput
+            value={nickname}
+            setValue={setNickname}
+            placeholder="Nickname"
+            style={globalStyles.inputField}
+            ref={nicknameInput}
+            onSubmitEditing={handleAuth}
+            returnKeyType="done"
+          />}
+          {isLogin ? <AuthButton title="Login" onPress={handleAuth} /> : <AuthButton title="Create Account" onPress={handleAuth} />}
+          <AuthButton title={isLogin ? 'Need to create an account?' : 'Already have an account?'} onPress={() => setIsLogin(!isLogin)} />
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
+
 export default AuthenticationScreen;
+  

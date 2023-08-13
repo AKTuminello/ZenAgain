@@ -21,18 +21,15 @@ const MainTab = createMaterialBottomTabNavigator();
 const RootStack = createStackNavigator();
 const UserStack = createStackNavigator();
 
-const SignInNavigator = () => {
-  const { user } = useContext(AuthContext);
+const MainNavigator = () => {
+  const { isLoggedIn } = useContext(AuthContext);
   return (
-    <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      {user ? (
-        <RootStack.Screen name="User" component={UserNavigator} />
-      ) : (
-        <RootStack.Screen name="Auth" component={AuthenticationScreen} />
-      )}
-    </RootStack.Navigator>
+    <NavigationContainer>
+      {isLoggedIn ? <LoggedInNavigator /> : <LoggedOutNavigator />}
+    </NavigationContainer>
   );
 };
+
 
 const theme = {
   ...DefaultTheme,
@@ -134,10 +131,10 @@ const UserStackScreen = () => (
   </UserStack.Navigator>
 );
 
-const UserNavigator = () => {
+const LoggedInNavigator = () => {
   return (
     <MainTab.Navigator
-      barStyle={{ backgroundColor: '#49176e' }} // The final color in the linear gradient
+      barStyle={{ backgroundColor: '#49176e' }}
       activeColor="#FFFFFF" 
       inactiveColor="#FFFFFF" 
     >
@@ -148,6 +145,21 @@ const UserNavigator = () => {
     </MainTab.Navigator>
   );
 };
+
+const LoggedOutNavigator = () => {
+  return (
+    <MainTab.Navigator
+      barStyle={{ backgroundColor: '#49176e' }}
+      activeColor="#FFFFFF" 
+      inactiveColor="#FFFFFF" 
+    >
+      <MainTab.Screen name="Home" component={HomeScreen} />
+      <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
+      <MainTab.Screen name="Sign-in" component={AuthenticationScreen} />
+    </MainTab.Navigator>
+  );
+};
+
 
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -220,9 +232,7 @@ const App = () => {
 
   console.log("Showing MainNavigator");
   return (
-    <NavigationContainer>
-      <SignInNavigator />
-    </NavigationContainer>
+    <MainNavigator/>
   );
 };
 
