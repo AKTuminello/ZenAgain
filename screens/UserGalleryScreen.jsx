@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, Image, StyleSheet, Text, TouchableHighlight, Modal, Dimensions, TouchableOpacity, Button } from 'react-native';
+import { View, FlatList, Image, StyleSheet, Text, TouchableHighlight, Modal, Dimensions, TouchableOpacity, Button, SafeAreaView } from 'react-native';
 import { collection, getDocs, doc, setDoc, arrayUnion, getDoc, arrayRemove } from '@firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { AuthContext } from '../AuthContext.jsx';
@@ -7,6 +7,7 @@ import { Appbar } from 'react-native-paper';
 import { globalStyles } from '../assets/globalStyles';
 import { onSnapshot } from '@firebase/firestore';
 import Swiper from 'react-native-swiper';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -100,10 +101,18 @@ const UserGalleryScreen = () => {
     setModalImage(null);
   };
   return (
-    <View style={globalStyles.container}>
-      <Appbar.Header>
-        <Appbar.Content title="User Gallery" />
-      </Appbar.Header>
+    <SafeAreaView style={{ flex: 1 }}>
+    <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
+      <LinearGradient colors={['#bee4ed', '#acc4d9']} style={{ padding: 0 }}> 
+        <Appbar.Header style={{ backgroundColor: 'transparent' }}>
+          <Appbar.Content
+           title="Gallery"
+           titleStyle={{ 
+            color: '#2E5090',
+            ...globalStyles.appbarTitle,
+          }}/>
+        </Appbar.Header>
+      </LinearGradient>
       <Swiper autoplay={false} showsPagination={false} showsButtons={true}>
         {images.map((item, index) => (
           <View key={index} style={globalStyles.swiperItem}>
@@ -129,7 +138,9 @@ const UserGalleryScreen = () => {
           </TouchableHighlight>
         </View>
       </Modal>
-    </View>
+      </LinearGradient>
+    </SafeAreaView>
+
   );
 };
 

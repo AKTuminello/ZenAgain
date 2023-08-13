@@ -1,14 +1,13 @@
 import React, { useState, useContext, useRef } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert, Image, Dimensions } from 'react-native';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
 import { getFirestore, doc, setDoc } from '@firebase/firestore';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import AuthInput from '../components/AuthenticationScreenComponents/AuthInput';
 import AuthButton from '../components/AuthenticationScreenComponents/AuthButton';
-import { Appbar } from 'react-native-paper';
 import { globalStyles } from '../assets/globalStyles';
-
+import { Appbar } from 'react-native-paper';
 
 const AuthenticationScreen = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -55,46 +54,44 @@ const AuthenticationScreen = () => {
 
   return (
     <View style={globalStyles.container}>
-      <Appbar.Header>
-  <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
-</Appbar.Header>
-
-      <AuthInput
-        value={email}
-        setValue={setEmail}
-        placeholder="Email"
-        onSubmitEditing={() => passwordInput.current.focus()}
-        returnKeyType="next"
-      />
-      <AuthInput
-        value={password}
-        setValue={setPassword}
-        placeholder="Password"
-        secureTextEntry
-        ref={passwordInput}
-        onSubmitEditing={isLogin ? handleAuth : () => nicknameInput.current.focus()}
-        returnKeyType={isLogin ? "done" : "next"}
-      />
-      {!isLogin && <AuthInput
-        value={nickname}
-        setValue={setNickname}
-        placeholder="Nickname"
-        ref={nicknameInput}
-        onSubmitEditing={handleAuth}
-        returnKeyType="done"
-      />}
-      {isLogin ? <AuthButton title="Login" onPress={handleAuth} /> : <AuthButton title="Create Account" onPress={handleAuth} />}
-      <AuthButton title={isLogin ? 'Need to create an account?' : 'Already have an account?'} onPress={() => setIsLogin(!isLogin)} />
+      <View style={{ flex: 1 }}>
+        <Appbar.Header>
+          <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
+        </Appbar.Header>
+        <AuthInput
+          value={email}
+          setValue={setEmail}
+          placeholder="Email"
+          style={globalStyles.inputField}
+          onSubmitEditing={() => passwordInput.current.focus()}
+          returnKeyType="next"
+        />
+        <AuthInput
+          value={password}
+          setValue={setPassword}
+          placeholder="Password"
+          secureTextEntry
+          style={globalStyles.inputField}
+          ref={passwordInput}
+          onSubmitEditing={isLogin ? handleAuth : () => nicknameInput.current.focus()}
+          returnKeyType={isLogin ? "done" : "next"}
+        />
+        {!isLogin && <AuthInput
+          value={nickname}
+          setValue={setNickname}
+          placeholder="Nickname"
+          style={globalStyles.inputField}
+          ref={nicknameInput}
+          onSubmitEditing={handleAuth}
+          returnKeyType="done"
+        />}
+        {isLogin ? <AuthButton title="Login" onPress={handleAuth} /> : <AuthButton title="Create Account" onPress={handleAuth} />}
+        <AuthButton title={isLogin ? 'Need to create an account?' : 'Already have an account?'} onPress={() => setIsLogin(!isLogin)} />
+      </View>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center' }}>
+        <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} />
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-});
-
 export default AuthenticationScreen;

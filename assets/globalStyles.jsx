@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 
 const themeColors = {
-  primary: '#a4b4be',
+  primary: '#bbe4ed',
   accent: '#49176e',
   background: '#aea1d0',
-  surface: '#265ef7',
-  text: '#300040',
+  surface: '#49176e',
+  text: '#2E5090',
   error: '#a4b4be',
+  navbarText: '#FFFFFF'
 };
 
 export const globalStyles = StyleSheet.create({
@@ -61,10 +62,13 @@ export const globalStyles = StyleSheet.create({
     marginTop: 10,
   },
   button: {
-    backgroundColor: '#D3D3D3',
+    backgroundColor: '#300040',
     borderRadius: 10,
     padding: 10,
     margin: 10,
+    fontFamily: 'JosefinSans-Regular',
+    color: '#FFFFFF',
+  
   },
   centeredView: {
     flex: 1,
@@ -90,6 +94,7 @@ export const globalStyles = StyleSheet.create({
   },
   text: {
     color: themeColors.text,
+    fontSize: 20,
   },
   instructionsText: {
     color: themeColors.text,
@@ -109,5 +114,31 @@ export const globalStyles = StyleSheet.create({
     fontSize: 24,
     color: themeColors.accent,
   },
+
+  titleContainer: {
+    paddingTop: 25,
+  },
+
+  navbar: {
+    backgroundColor: themeColors.surface,
+  },
+
+  swiperText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily:  'JosefinSans-SemiBoldItalic',
+    color: '#235090', 
+    marginBottom: 10,
+  },
+
+  inputField: {
+    backgroundColor: '#FFFFFF', // white background
+    borderColor: '#300040', 
+    borderWidth: 1, 
+    borderRadius: 5, 
+    paddingHorizontal: 10, 
+    fontSize: 16,
+  },
+
   });
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, Switch, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Switch, Image, TextInput,SafeAreaView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Swiper from 'react-native-swiper';
 import * as ImagePicker from 'expo-image-picker';
@@ -14,6 +14,8 @@ import LogoutButton from '../components/UserScreenComponents/LogoutButton';
 import { onSnapshot, updateDoc } from '@firebase/firestore';
 import { KeyboardAvoidingView } from 'react-native';
 import { globalStyles } from '../assets/globalStyles';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 import HomeScreen from './HomeScreen';
 import UserGallery from './UserGalleryScreen';
@@ -28,7 +30,7 @@ const UserScreenStack = () => (
     <Stack.Screen name="Home" component={HomeScreen} />
     <Stack.Screen name="UserGallery" component={UserGallery} />
     <Stack.Screen name="FunStuff" component={FunStuffScreen} />
-    <Stack.Screen name="MoodTracker" component={MoodTrackerScreen} /> {/* Add this line */}
+    <Stack.Screen name="MoodTracker" component={MoodTrackerScreen} /> 
   </Stack.Navigator>
 );
 
@@ -276,9 +278,9 @@ const UserScreen = ({ navigation }) => {
 
   const handleModalClose = async () => {
     const fieldName = selectedImage.name.split(' ').join('').toLowerCase();
-    // Update the text
+    
     await handleImageTextUpdate(fieldName, selectedImageText);
-    // Update the display locations
+    
     await handleImageDisplayToggle(fieldName, 'FunStuff', selectedImageDisplayFunStuff);
     await handleImageDisplayToggle(fieldName, 'UserGallery', selectedImageDisplayUserGallery);
     setModalVisible(false);
@@ -335,20 +337,30 @@ const UserScreen = ({ navigation }) => {
     }
   };
 
-return (
-  <View style={globalStyles.container}>
-    <Appbar.Header>
-      <Appbar.Content title={`Welcome ${nickname || 'User'}`} />
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+    <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
+      <LinearGradient colors={['#bee4ed', '#acc4d9']} style={{ padding: 0 }}> 
+        <Appbar.Header style={{ backgroundColor: 'transparent' }}>
+          <Appbar.Content
+        title={`Welcome ${nickname || 'User'}`}
+        titleStyle={{
+          color: '#2E5090',
+          ...globalStyles.appbarTitle,
+        }}
+      />
       <LogoutButton handleLogout={handleLogout} />
     </Appbar.Header>
-
-    <View style={globalStyles.swiperContainer}>
-      <Swiper
-        autoplay={true}
-        showsPagination={false}
-        showsButtons={true}
-        style={globalStyles.swiper}
-      >
+    </LinearGradient>
+    <View style={{ flex: 1}}>
+      <View style={globalStyles.swiperContainer}>
+        <Swiper
+          autoplay={true}
+          showsPagination={false}
+          showsButtons={true}
+          style={globalStyles.swiper}
+        >
         {[
           { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
           { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
@@ -368,70 +380,101 @@ return (
                 <Text>No Image</Text>
               </View>
             )}
-            <Text>{image.text}</Text>
+            <Text>{image?.text}</Text>
           </TouchableOpacity>
         ))}
       </Swiper>
-      
-      <TouchableOpacity
-        onPress={() => navigation.navigate('MoodTracker')}
-        style={globalStyles.button}
-      >
-        <Text>Go to Mood Tracker</Text>
-      </TouchableOpacity>
-    </View>
-
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={handleModalClose}
-    >
-      <KeyboardAvoidingView
-        behavior="height"
-        style={globalStyles.centeredView}
-      >
-        <View style={globalStyles.modalView}>
-          <Text>What do you want to change about {selectedImage.name}?</Text>
-          <TextInput
-            value={selectedImageText}
-            onChangeText={setSelectedImageText}
-            onEndEditing={() => handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText)}
-            placeholder="Enter image text"
-            style={globalStyles.textInput}
-          />
-          <View style={globalStyles.switchRow}>
-            <Text>Display in Fun Stuff:</Text>
-            <Switch
-              value={selectedImageDisplayFunStuff}
-              onValueChange={setSelectedImageDisplayFunStuff}
-            />
-          </View>
-          <View style={globalStyles.switchRow}>
-            <Text>Display in User Gallery:</Text>
-            <Switch
-              value={selectedImageDisplayUserGallery}
-              onValueChange={setSelectedImageDisplayUserGallery}
-            />
-          </View>
-          <TouchableOpacity style={globalStyles.button} onPress={() => {
-            handleChooseImage(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageDisplayFunStuff, selectedImageDisplayUserGallery, selectedImageText);
-            handleImageTextUpdate(selectedImage.name.split(' ').join('').toLowerCase(), selectedImageText);
-          }}>
-            <Text>Choose a new image.</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={globalStyles.button} onPress={() => handleDeleteImage(selectedImage.name.split(' ').join('').toLowerCase())}>
-            <Text>Delete this image</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={globalStyles.button} onPress={handleModalClose}>
-            <Text>I'm done.</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MoodTracker')}
+            style={globalStyles.button}
+          >
+            <Text style={{ color: '#ffffff' }}>Go to Mood Tracker</Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
-    </Modal>
-  </View>
-);
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={handleModalClose}
+        >
+          <KeyboardAvoidingView
+            behavior="height"
+            style={globalStyles.centeredView}
+          >
+            <View style={[globalStyles.modalContainer, { backgroundColor: '#FFB7D5' }]}>
+              <Text>What do you want to change about {selectedImage.name}?</Text>
+              <TextInput
+                value={selectedImageText}
+                onChangeText={setSelectedImageText}
+                onEndEditing={() =>
+                  handleImageTextUpdate(
+                    selectedImage.name.split(' ').join('').toLowerCase(),
+                    selectedImageText
+                  )
+                }
+                placeholder="Enter image text"
+                style={globalStyles.textInput}
+              />
+              <View style={globalStyles.switchRow}>
+                <Text>Display in Fun Stuff:</Text>
+                <Switch
+                  value={selectedImageDisplayFunStuff}
+                  onValueChange={setSelectedImageDisplayFunStuff}
+                />
+              </View>
+              <View style={globalStyles.switchRow}>
+                <Text>Display in User Gallery:</Text>
+                <Switch
+                  value={selectedImageDisplayUserGallery}
+                  onValueChange={setSelectedImageDisplayUserGallery}
+                />
+              </View>
+              <TouchableOpacity
+                style={globalStyles.button}
+                onPress={() => {
+                  handleChooseImage(
+                    selectedImage.name
+                      .split(' ')
+                      .join('')
+                      .toLowerCase(),
+                    selectedImageDisplayFunStuff,
+                    selectedImageDisplayUserGallery,
+                    selectedImageText
+                  );
+                  handleImageTextUpdate(
+                    selectedImage.name
+                      .split(' ')
+                      .join('')
+                      .toLowerCase(),
+                    selectedImageText
+                  );
+                }}
+              >
+                <Text style={{ color: '#FFFFFF' }}>Choose a new image.</Text>
+</TouchableOpacity>
+<TouchableOpacity
+  style={globalStyles.button}
+  onPress={() =>
+    handleDeleteImage(
+      selectedImage.name.split(' ').join('').toLowerCase()
+    )
+  }
+>
+  <Text style={{ color: '#FFFFFF' }}>Delete this image</Text>
+</TouchableOpacity>
+<TouchableOpacity
+  style={globalStyles.button}
+  onPress={handleModalClose}
+>
+  <Text style={{ color: '#FFFFFF' }}>I'm done.</Text>
+</TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </Modal>
+        </View>
+  </LinearGradient>
+</SafeAreaView>
+  );
 };
 
 export default UserScreen;
-  

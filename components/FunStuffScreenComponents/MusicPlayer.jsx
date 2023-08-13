@@ -27,6 +27,7 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
 
   const toggleMusic = async () => {
     if (!fileUrl) {
+      alert('No music file provided!'); 
       return;
     }
     setIsMusicOn(!isMusicOn);
@@ -34,7 +35,6 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
 
   const playAudio = async (fileUrl) => {
     try {
-      // Stop and unload any previously playing audio.
       await stopAudio();
 
       const { sound } = await Audio.Sound.createAsync({ uri: fileUrl });
@@ -43,7 +43,7 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
         await sound.playAsync();
       }
     } catch (error) {
-      console.error('Error playing audio:', error);
+      alert('Error playing audio: ' + error.message); 
     }
   };
 
@@ -56,7 +56,12 @@ const MusicPlayer = ({ fileUrl, isMusicOn, setIsMusicOn }) => {
   };
 
   return (
-    <FAB icon={isMusicOn ? "music" : "music-off"} onPress={toggleMusic} />
+    <FAB
+      icon={isMusicOn ? 'music' : 'music-off'}
+      onPress={toggleMusic}
+      accessibilityLabel={isMusicOn ? 'Pause music' : 'Play music'} 
+      accessibilityRole="button"
+    />
   );
 };
 

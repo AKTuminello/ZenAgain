@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import MusicPlayer from '../components/FunStuffScreenComponents/MusicPlayer';
@@ -8,6 +8,7 @@ import { FAB, Appbar, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import { globalStyles } from '../assets/globalStyles';
 import { onSnapshot } from 'firebase/firestore';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
@@ -117,81 +118,86 @@ const FunStuffScreen = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
-      <Appbar.Header style={{ backgroundColor: colors.primary }}>
-        <Appbar.Content
-          title="Enhancements"
-          titleStyle={{ 
-            color: colors.text, 
-            ...globalStyles.appbarTitle,
-          }}
-        />
-        <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
-      </Appbar.Header>
+    <SafeAreaView style={{ flex: 1 }}>
+      <LinearGradient colors={['#bbe4ed', '#aea1d0', '#49176e']} style={globalStyles.container}>
+        {error && <Text style={{ color: 'red' }}>{error}</Text>}
+        <Appbar.Header style={{ backgroundColor: colors.primary }}>
+          <Appbar.Content
+            title="Enhancements"
+            titleStyle={{ 
+              color: colors.text, 
+              ...globalStyles.appbarTitle,
+            }}
+          />
+          <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
+        </Appbar.Header>
   
-      <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
+        <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
   
-      <View style={{ height: '55%' }}>
+        <View style={{ height: '55%' }}>
         <Swiper 
-          autoplay={false} 
-          showsPagination={false} 
-          showsButtons={true} 
-          nextButton={<Text style={globalStyles.buttonText}>Next</Text>}
-          prevButton={<Text style={globalStyles.buttonText}>Prev</Text>}
-        >
-          {swiperImages.map((image, index) => (
-            <TouchableOpacity 
-              key={index} 
-              accessible
-              accessibilityLabel={`Image of ${image.nickname}`}
-              style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
-              onPress={() => handleImagePress(image.url)}
-            >
-              <Text>{image.nickname}</Text>
-              <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} accessible accessibilityLabel={`Image of ${image.nickname}`} onError={(e) => console.log('Image loading error:', e)} />
-              <Text>{image.text}</Text>
-            </TouchableOpacity>
-          ))}
-        </Swiper>
-        <Text style={globalStyles.instructionsText}>Instructions for use:</Text>
-        <Text style={globalStyles.instructionsText}>Choose a blend from the menu.</Text>
-        <Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
-        <Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
-      </View>
-  
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={!!fullScreenImage}
-        onRequestClose={handleCloseImage}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
-          <Image source={{ uri: fullScreenImage }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
-          <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
-        </View>
-      </Modal>
-  
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={isModalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        {selectedBlend && (
-          <View style={globalStyles.centeredView}>
-            <Text style={globalStyles.modalText}>{selectedBlend.name}</Text>
-            <Text style={globalStyles.modalText}>{selectedBlend.oildescription}</Text>
-            {selectedBlend.ingredients.map((ingredient, index) => (
-              <Text key={index} style={globalStyles.modalText}>{ingredient}</Text>
-            ))}
-            <FAB icon="close" onPress={() => setModalVisible(false)} style={globalStyles.closeButton} />
-          </View>
-        )}
-      </Modal>
+  autoplay={false} 
+  showsPagination={false} 
+  showsButtons={true} 
+  nextButton={<Text style={globalStyles.buttonText}>{"Next"}</Text>}
+  prevButton={<Text style={globalStyles.buttonText}>{"Prev"}</Text>}
+>
+  {swiperImages.map((image, index) => (
+    <TouchableOpacity 
+      key={index} 
+      accessible
+      accessibilityLabel={`Image of ${image.nickname}`}
+      style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
+      onPress={() => handleImagePress(image.url)}
+    >
+      <Text style={globalStyles.swiperText}>{image.nickname}</Text>
+      <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} accessible accessibilityLabel={`Image of ${image.nickname}`} onError={(e) => console.log('Image loading error:', e)} />
+      <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text }}>{image.text}</Text>
+    </TouchableOpacity>
+  ))}
+</Swiper>
+      <Text style={globalStyles.instructionsText}>Instructions for use:</Text>
+      <Text style={globalStyles.instructionsText}>Choose a blend from the menu.</Text>
+      <Text style={globalStyles.instructionsText}>Adjust your volume--or turn the music off.</Text>
+      <Text style={globalStyles.instructionsText}>Tap the picture to make it larger and use it as a focal point.</Text>
+      <Text style={globalStyles.instructionsText}>Breathe deeply and enjoy!</Text>
+      <Text style={globalStyles.instructionsText}>Some of our users have also shared their favorites.</Text>
     </View>
+
+
+  
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={!!fullScreenImage}
+          onRequestClose={handleCloseImage}
+        >
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+            <Image source={{ uri: fullScreenImage }} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+            <FAB icon="close" onPress={handleCloseImage} style={{ position: 'absolute', top: 50, right: 20 }} />
+          </View>
+        </Modal>
+  
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={isModalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          {selectedBlend && (
+            <View style={globalStyles.centeredView}>
+              <Text style={globalStyles.modalText}>{selectedBlend.name}</Text>
+              <Text style={globalStyles.modalText}>{selectedBlend.oildescription}</Text>
+              {selectedBlend.ingredients.map((ingredient, index) => (
+                <Text key={index} style={globalStyles.modalText}>{ingredient}</Text>
+              ))}
+              <FAB icon="close" onPress={() => setModalVisible(false)} style={globalStyles.closeButton} />
+            </View>
+          )}
+        </Modal>
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
-
-export default FunStuffScreen;
   
+export default FunStuffScreen;  

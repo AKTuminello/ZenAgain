@@ -125,7 +125,11 @@ const theme = {
 
 const UserStackScreen = () => (
   <UserStack.Navigator>
-    <UserStack.Screen name="User" component={UserScreen} />
+    <UserStack.Screen
+      name="User"
+      component={UserScreen}
+      options={{ headerShown: false }} 
+    />
     <UserStack.Screen name="MoodTracker" component={MoodTrackerScreen} />
   </UserStack.Navigator>
 );
@@ -133,9 +137,9 @@ const UserStackScreen = () => (
 const UserNavigator = () => {
   return (
     <MainTab.Navigator
-      barStyle={{ backgroundColor: theme.colors.primary }}
-      activeColor={theme.colors.text}
-      inactiveColor={theme.colors.accent}
+      barStyle={{ backgroundColor: '#49176e' }} // The final color in the linear gradient
+      activeColor="#FFFFFF" 
+      inactiveColor="#FFFFFF" 
     >
       <MainTab.Screen name="Home" component={HomeScreen} />
       <MainTab.Screen name="Fun Stuff" component={FunStuffScreen} />
