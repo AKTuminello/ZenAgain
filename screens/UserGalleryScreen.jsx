@@ -35,18 +35,26 @@ const UserGalleryScreen = () => {
     const users = querySnapshot.docs.map(doc => doc.data());
     const images = [];
     
-    console.log('Users:', users); // Log the retrieved users array
   
     users.forEach(user => {
-      console.log('User:', user); // Log the current user being processed
+
       
       if (user.myprofilepic_displayInUserGallery) {
         images.push({ url: user.myprofilepic, text: user.myprofilepic_text || '', nickname: user.nickname });
       }
-      // Similarly, add conditions for other images here
+      if (user.myfavoriteimage_displayInUserGallery) {
+        images.push({ url: user.myfavoriteimage, text: user.myfavoriteimage_text || '', nickname: user.nickname });
+      }
+      if (user.mysecondfavorite_displayInUserGallery) {
+        images.push({ url: user.mysecondfavorite, text: user.mysecondfavorite_text || '', nickname: user.nickname });
+      }
+      if (user.mythirdfavorite_displayInUserGallery) {
+        images.push({ url: user.mythirdfavorite, text: user.mythirdfavorite_text || '', nickname: user.nickname });
+      }
+      
     });
   
-    console.log('Images:', images); // Log the final images array
+
     
     setImages(images);
   };

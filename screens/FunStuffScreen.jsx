@@ -52,47 +52,48 @@ const FunStuffScreen = () => {
       const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
         const users = querySnapshot.docs.map(doc => doc.data());
         const images = [];
-      
-        if (user.myprofilepic_displayInFunStuff) {
-          images.push({ 
-            url: user.myprofilepic, 
-            text: user.myprofilepic_text, 
-            nickname: user.nickname 
-          });
-        }
-        if (user.myfavoriteimage_displayInFunStuff) {
-          images.push({ 
-            url: user.myfavoriteimage, 
-            text: user.myfavoriteimage_text, 
-            nickname: user.nickname 
-          });
-        }
-        if (user.mysecondfavorite_displayInFunStuff) {
-          images.push({ 
-            url: user.mysecondfavorite, 
-            text: user.mysecondfavorite_text, 
-            nickname: user.nickname 
-          });
-        }
-        if (user.mythirdfavorite_displayInFunStuff) {
-          images.push({ 
-            url: user.mythirdfavorite, 
-            text: user.mythirdfavorite_text, 
-            nickname: user.nickname 
-          });
-        }
-      });
-      
-      setFunImages(images);
-      setSwiperImages(images); 
   
-      return unsubscribe;
+        users.forEach(user => { // Loop through users
+          if (user.myprofilepic_displayInFunStuff) {
+            images.push({
+              url: user.myprofilepic,
+              text: user.myprofilepic_text,
+              nickname: user.nickname,
+            });
+          }
+          if (user.myfavoriteimage_displayInFunStuff) {
+            images.push({
+              url: user.myfavoriteimage,
+              text: user.myfavoriteimage_text,
+              nickname: user.nickname,
+            });
+          }
+          if (user.mysecondfavorite_displayInFunStuff) {
+            images.push({
+              url: user.mysecondfavorite,
+              text: user.mysecondfavorite_text,
+              nickname: user.nickname,
+            });
+          }
+          if (user.mythirdfavorite_displayInFunStuff) {
+            images.push({
+              url: user.mythirdfavorite,
+              text: user.mythirdfavorite_text,
+              nickname: user.nickname,
+            });
+          }
+        });
+  
+        setFunImages(images);
+        setSwiperImages(images);
+  
+        return unsubscribe;
+      });
     } catch (error) {
       console.error('Error fetching images:', error);
       setError('There was a problem fetching the images. Please try again later.');
     }
-  };
-  
+  };  
   
   const handleBlendSelection = async (blendData) => {
     if (selectedBlend && selectedBlend.id === blendData.id) {

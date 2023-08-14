@@ -45,29 +45,8 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: '#FFB7D5',
     borderRadius: 20,
     padding: 20,
-    justifyContent: 'center',
     alignItems: 'center',
   },
-
-  modalText: {
-    fontSize: 24, 
-    color: '#300040',
-    marginBottom: 15, 
-    textAlign: 'center',
-  },
-  instructionsText: {
-    fontSize: 18, 
-    color: '#300040',
-    fontFamily: 'JosefinSans-Italic', 
-    fontStyle: 'italic',
-    textAlign: 'center', 
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-  },
-
   modalTextInput: {
     width: '80%',
     padding: 10,
@@ -80,27 +59,30 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '80%',
-    marginTop: 10,
+    marginTop: 5, 
+    marginBottom: 5,
   },
   button: {
     backgroundColor: '#300040',
     borderRadius: 10,
     padding: 10,
-    margin: 10,
+    margin: 5,
     fontFamily: 'JosefinSans-Regular',
     color: '#FFFFFF',
-  
+    width: '100%', 
+    alignItems: 'center',
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 10,
   },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
     fontSize: 24,
+    color: '#300040',
   },
   closeButton: {
     position: 'absolute',
@@ -129,10 +111,12 @@ export const globalStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     color: themeColors.accent,
+    fontFamily: 'JosefinSans-SemiBoldItalic',
+    height: 50,
   },
 
   titleContainer: {
-    paddingTop: 25,
+    paddingTop: 0,
   },
 
   navbar: {
@@ -150,7 +134,7 @@ export const globalStyles = StyleSheet.create({
   inputField: {
     backgroundColor: '#FFFFFF', 
     borderColor: '#300040', 
-    borderWidth: 1, 
+    borderWidth: 2, 
     borderRadius: 5, 
     paddingHorizontal: 10, 
     fontSize: 16,
@@ -163,6 +147,28 @@ export const globalStyles = StyleSheet.create({
     margin: 10,
     alignItems: 'center'
 
+  },
+  modalButton: {
+    backgroundColor: '#300040',
+    borderRadius: 10,
+    padding : 5, 
+    margin: 5,
+    alignItems: 'center',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '80%',
+    marginTop: 5, 
+    marginBottom: 5, 
+  },
+  nicknameText: {
+    fontSize: 20,
+    fontWeight: 'normal',
+    fontFamily:  'JosefinSans-SemiBoldItalic',
+    color: '#FC4483', 
+    marginBottom: 10,
   },
 
   });
