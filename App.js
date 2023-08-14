@@ -166,7 +166,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = useState(false);
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
@@ -205,6 +205,7 @@ const App = () => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      setIsLoggedIn(user!==null);
       setLoading(false);
     });
     return unsubscribe;

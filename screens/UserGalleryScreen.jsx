@@ -34,22 +34,23 @@ const UserGalleryScreen = () => {
     const querySnapshot = await getDocs(collection(db, 'users'));
     const users = querySnapshot.docs.map(doc => doc.data());
     const images = [];
+    
+    console.log('Users:', users); // Log the retrieved users array
+  
     users.forEach(user => {
-      if (user.profilePic_displayInUserGallery) {
-        images.push({ url: user.profilePic, text: user.myprofilePic_text || '', nickname: user.nickname });
+      console.log('User:', user); // Log the current user being processed
+      
+      if (user.myprofilepic_displayInUserGallery) {
+        images.push({ url: user.myprofilepic, text: user.myprofilepic_text || '', nickname: user.nickname });
       }
-      if (user.favePic1_displayInUserGallery) {
-        images.push({ url: user.favePic1, text: user.myfavoriteimage_text || '', nickname: user.nickname });
-      }
-      if (user.favePic2_displayInUserGallery) {
-        images.push({ url: user.favePic2, text: user.mysecondfavorite_text || '', nickname: user.nickname });
-      }
-      if (user.favePic3_displayInUserGallery) {
-        images.push({ url: user.favePic3, text: user.mythirdfavorite_text || '', nickname: user.nickname });
-      }
+      // Similarly, add conditions for other images here
     });
+  
+    console.log('Images:', images); // Log the final images array
+    
     setImages(images);
   };
+  
 
   const fetchFriendsFromFirestore = async () => {
     const db = getFirestore();

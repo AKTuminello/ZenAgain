@@ -64,6 +64,7 @@ const UserScreen = ({ navigation }) => {
   const { setIsLoggedIn, setUser } = useContext(AuthContext);
 
 
+
   useEffect(() => {
     if (user) {
       fetchNickname();
@@ -199,29 +200,25 @@ const UserScreen = ({ navigation }) => {
     const unsub = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        setProfilePic(userData.profilePic || null);
+        setProfilePic(userData.myprofilepic || null);
         setmyprofilepic_text(userData.myprofilepic_text || '');
-        console.log(`Profile picture text: ${userData.myprofilepic_text}`);
-        setProfilePicDisplayInFunStuff(userData.profilePic_displayInFunStuff || false);
-        setProfilePicDisplayInUserGallery(userData.profilePic_displayInUserGallery || false);
-        setFavePic1(userData.favePic1 || null);
+        setProfilePicDisplayInFunStuff(userData.myprofilepic_displayInFunStuff || false);
+        setProfilePicDisplayInUserGallery(userData.myprofilepic_displayInUserGallery || false);
+        setFavePic1(userData.myfavoriteimage || null);
         setFavePic1Text(userData.myfavoriteimage_text || '');
-        console.log(`Fave picture 1 text: ${userData.myfavoriteimage_text}`);
-        setFavePic1DisplayInFunStuff(userData.favePic1_displayInFunStuff || false);
-        setFavePic1DisplayInUserGallery(userData.favePic1_displayInUserGallery || false);
-        setFavePic2(userData.favePic2 || null);
+        setFavePic1DisplayInFunStuff(userData.myfavoriteimage_displayInFunStuff || false);
+        setFavePic1DisplayInUserGallery(userData.myfavoriteimage_displayInUserGallery || false);
+        setFavePic2(userData.mysecondfavorite || null);
         setFavePic2Text(userData.mysecondfavorite_text || '');
-        console.log(`Fave picture 2 text: ${userData.mysecondfavorite_text}`);
-        setFavePic2DisplayInFunStuff(userData.favePic2_displayInFunStuff || false);
-        setFavePic2DisplayInUserGallery(userData.favePic2_displayInUserGallery || false);
-        setFavePic3(userData.favePic3 || null);
+        setFavePic2DisplayInFunStuff(userData.mysecondfavorite_displayInFunStuff || false);
+        setFavePic2DisplayInUserGallery(userData.mysecondfavorite_displayInUserGallery || false);
+        setFavePic3(userData.mythirdfavorite || null);
         setFavePic3Text(userData.mythirdfavorite_text || '');
-        console.log(`Fave picture 3 text: ${userData.mythirdfavorite_text}`);
-        setFavePic3DisplayInFunStuff(userData.favePic3_displayInFunStuff || false);
-        setFavePic3DisplayInUserGallery(userData.favePic3_displayInUserGallery || false);
+        setFavePic3DisplayInFunStuff(userData.mythirdfavorite_displayInFunStuff || false);
+        setFavePic3DisplayInUserGallery(userData.mythirdfavorite_displayInUserGallery || false);
       }
     });
-  
+
     return () => unsub();
   };
 
@@ -230,19 +227,19 @@ const UserScreen = ({ navigation }) => {
     const userDocRef = doc(db, 'users', user.uid);
 
     const currentValue =
-      fieldName === 'profilePic'
+      fieldName === 'myprofilepic'
         ? displayLocation === 'FunStuff'
           ? profilePicDisplayInFunStuff
           : profilePicDisplayInUserGallery
-        : fieldName === 'favePic1'
+        : fieldName === 'myfavoriteimage'
         ? displayLocation === 'FunStuff'
           ? favePic1DisplayInFunStuff
           : favePic1DisplayInUserGallery
-        : fieldName === 'favePic2'
+        : fieldName === 'mysecondfavorite'
         ? displayLocation === 'FunStuff'
           ? favePic2DisplayInFunStuff
           : favePic2DisplayInUserGallery
-        : fieldName === 'favePic3'
+        : fieldName === 'mythirdfavorite'
         ? displayLocation === 'FunStuff'
           ? favePic3DisplayInFunStuff
           : favePic3DisplayInUserGallery
@@ -250,25 +247,25 @@ const UserScreen = ({ navigation }) => {
 
     await setDoc(userDocRef, { [`${fieldName}_displayIn${displayLocation}`]: !currentValue }, { merge: true });
 
-    if (fieldName === 'profilePic') {
+    if (fieldName === 'myprofilepic') {
       if (displayLocation === 'FunStuff') {
         setProfilePicDisplayInFunStuff(!currentValue);
       } else {
         setProfilePicDisplayInUserGallery(!currentValue);
       }
-    } else if (fieldName === 'favePic1') {
+    } else if (fieldName === 'myfavoriteimage') {
       if (displayLocation === 'FunStuff') {
         setFavePic1DisplayInFunStuff(!currentValue);
       } else {
         setFavePic1DisplayInUserGallery(!currentValue);
       }
-    } else if (fieldName === 'favePic2') {
+    } else if (fieldName === 'mysecondfavorite') {
       if (displayLocation === 'FunStuff') {
         setFavePic2DisplayInFunStuff(!currentValue);
       } else {
         setFavePic2DisplayInUserGallery(!currentValue);
       }
-    } else if (fieldName === 'favePic3') {
+    } else if (fieldName === 'mythirdfavorite') {
       if (displayLocation === 'FunStuff') {
         setFavePic3DisplayInFunStuff(!currentValue);
       } else {
@@ -313,25 +310,25 @@ const UserScreen = ({ navigation }) => {
       });
 
       switch (fieldName) {
-        case 'profilePic':
+        case 'myprofilepic':
           setProfilePic(null);
           setmyprofilepic_text('');
           setProfilePicDisplayInFunStuff(false);
           setProfilePicDisplayInUserGallery(false);
           break;
-        case 'favePic1':
+        case 'myfavoriteimage':
           setFavePic1(null);
           setFavePic1Text('');
           setFavePic1DisplayInFunStuff(false);
           setFavePic1DisplayInUserGallery(false);
           break;
-        case 'favePic2':
+        case 'mysecondfavorite':
           setFavePic2(null);
           setFavePic2Text('');
           setFavePic2DisplayInFunStuff(false);
           setFavePic2DisplayInUserGallery(false);
           break;
-        case 'favePic3':
+        case 'mythirdfavorite':
           setFavePic3(null);
           setFavePic3Text('');
           setFavePic3DisplayInFunStuff(false);
