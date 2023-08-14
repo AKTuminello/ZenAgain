@@ -9,33 +9,24 @@ const JitteryBall = ({ onComplete }) => {
   const moveYAnim = useRef(new Animated.Value(screenHeight / 2)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [animationFinished, setAnimationFinished] = useState(false);
-  const [text, setText] = useState('All over the place?'); 
-
+  const [text, setText] = useState('Breathe'); 
 
   useEffect(() => {
-    // Show second text after 2.5 seconds
-    const textTimeout1 = setTimeout(() => {
-      setText('Time to find your');
-    }, 2500);
-
-    // Show final text after additional 2 seconds
-    const textTimeout2 = setTimeout(() => {
-      setText('ZenAgain');
-    }, 4500); // 2500 (first text) + 2000 (second text)
+    const textTimeout1 = setTimeout(() => { setText("You've found"); }, 2000);
+    const textTimeout2 = setTimeout(() => { setText('ZenAgain'); }, 3000); // 2000 + 2000
 
     const sequence = [];
 
-    // Reduce the number of iterations to shave off about 4 seconds
     for (let i = 0; i < 10; i++) {
       sequence.push(
         Animated.timing(moveXAnim, {
-          toValue: Math.random() * (screenWidth - 50), // Ensure it doesn't go off-screen
+          toValue: Math.random() * (screenWidth - 50),
           duration: 400,
           easing: Easing.ease,
           useNativeDriver: true
         }),
         Animated.timing(moveYAnim, {
-          toValue: Math.random() * (screenHeight - 50), // Ensure it doesn't go off-screen
+          toValue: Math.random() * (screenHeight - 50),
           duration: 400,
           easing: Easing.ease,
           useNativeDriver: true
@@ -45,20 +36,20 @@ const JitteryBall = ({ onComplete }) => {
 
     sequence.push(
       Animated.timing(moveXAnim, {
-        toValue: screenWidth / 2 + 120, // Adjusted to rest at the second "n" in "ZenAgain"
-        duration: 500,
+        toValue: screenWidth / 2 + 120,
+        duration: 100,
         easing: Easing.ease,
         useNativeDriver: true
       }),
       Animated.timing(moveYAnim, {
-        toValue: screenHeight / 2 + 20, // Adjusted to rest at the same level of the second letter "n"
-        duration: 500,
+        toValue: screenHeight / 2 + 20,
+        duration: 100,
         easing: Easing.ease,
         useNativeDriver: true
       }),
       Animated.timing(scaleAnim, {
         toValue: 2,
-        duration: 2500,
+        duration: 100, // Reduced from 1000
         easing: Easing.ease,
         useNativeDriver: true
       })
@@ -73,14 +64,14 @@ const JitteryBall = ({ onComplete }) => {
     return () => {
       clearTimeout(textTimeout1);
       clearTimeout(textTimeout2);
-    }; // Clear timeouts if component unmounts
+    };
   }, []);
 
   useEffect(() => {
     if (animationFinished) {
       setTimeout(() => {
         onComplete();
-      }, 4000);
+      }, 500); // Reduced from 4000
     }
   }, [animationFinished, onComplete]);
 
@@ -124,9 +115,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     textAlign: 'center',
     fontFamily: 'JosefinSans-BoldItalic',
-    color: '#bee4de',
-    width: '80%', // Limit width to avoid text falling off the screen
-    left: '10%',  // Center the text
+    color: '#008080',
+    width: '80%',
+    left: '10%',
   },
   ball: {
     width: 50,
