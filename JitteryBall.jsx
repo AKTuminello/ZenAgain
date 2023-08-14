@@ -9,10 +9,10 @@ const JitteryBall = ({ onComplete }) => {
   const moveYAnim = useRef(new Animated.Value(screenHeight / 2)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [animationFinished, setAnimationFinished] = useState(false);
-  const [text, setText] = useState('Breathe'); 
+  const [text, setText] = useState('Breathe...'); 
 
   useEffect(() => {
-    const textTimeout1 = setTimeout(() => { setText("You've found"); }, 2000);
+    const textTimeout1 = setTimeout(() => { setText("You've got"); }, 2000);
     const textTimeout2 = setTimeout(() => { setText('ZenAgain'); }, 3000); // 2000 + 2000
 
     const sequence = [];
