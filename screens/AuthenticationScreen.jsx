@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { View, Alert, Image, Dimensions, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from '@firebase/auth';
 import { getFirestore, doc, setDoc } from '@firebase/firestore';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -84,7 +84,7 @@ const AuthenticationScreen = () => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={globalStyles.container}>
+      <ScrollView contentContainerStyle={globalStyles.container} accessibilityLabel="Authentication Screen" accessibilityHint="This is the login and registration screen.">
         <View>
           <Appbar.Header>
             <Appbar.Content title={isLogin ? 'Login' : 'Create Account'} />
@@ -96,6 +96,8 @@ const AuthenticationScreen = () => {
             style={globalStyles.inputField}
             onSubmitEditing={() => passwordInput.current.focus()}
             returnKeyType="next"
+            accessibilityLabel="Email Input Field"
+            accessibilityHint="Enter your email address here."
           />
           <AuthInput
             value={password}
@@ -106,6 +108,8 @@ const AuthenticationScreen = () => {
             ref={passwordInput}
             onSubmitEditing={isLogin ? handleAuth : () => nicknameInput.current.focus()}
             returnKeyType={isLogin ? "done" : "next"}
+            accessibilityLabel="Password Input Field"
+            accessibilityHint="Enter your password here."
           />
           {!isLogin && <AuthInput
             value={nickname}
@@ -115,12 +119,14 @@ const AuthenticationScreen = () => {
             ref={nicknameInput}
             onSubmitEditing={handleAuth}
             returnKeyType="done"
+            accessibilityLabel="Nickname Input Field"
+            accessibilityHint="Enter your nickname here."
           />}
           {isLogin ? <AuthButton title="Login" onPress={handleAuth} /> : <AuthButton title="Create Account" onPress={handleAuth} />}
           <AuthButton title={isLogin ? 'Need to create an account?' : 'Already have an account?'} onPress={() => setIsLogin(!isLogin)} />
         </View>
         <View style={{ alignItems: 'center' }}>
-          <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} />
+          <Image source={require('../assets/images/lotusrainbow.png')} style={{ width: Dimensions.get('window').width / 1.5, height: Dimensions.get('window').width / 1.5, resizeMode: 'contain' }} accessibilityLabel="Lotus Rainbow" accessibilityRole="image" />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -128,4 +134,3 @@ const AuthenticationScreen = () => {
 };
 
 export default AuthenticationScreen;
-  
