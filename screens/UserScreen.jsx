@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, Switch, Image, TextInput,SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Switch, Image, TextInput,SafeAreaView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Swiper from 'react-native-swiper';
 import * as ImagePicker from 'expo-image-picker';
@@ -62,10 +62,6 @@ const UserScreen = ({ navigation }) => {
   const [selectedImageDisplayUserGallery, setSelectedImageDisplayUserGallery] = useState(false);
   const [selectedImageText, setSelectedImageText] = useState('');
   const { setIsLoggedIn, setUser } = useContext(AuthContext);
-  const [aboutText, setAboutText] = useState(''); 
-  const [aboutDisplayInFunStuff, setAboutDisplayInFunStuff] = useState(false); 
-  const [aboutDisplayInUserGallery, setAboutDisplayInUserGallery] = useState(false);
-
 
 
 
@@ -74,7 +70,7 @@ const UserScreen = ({ navigation }) => {
       fetchNickname();
       const unsub = fetchUserDoc();
   
-      
+      // Cleanup function
       return () => unsub();
     }
   }, [user]);
@@ -216,11 +212,10 @@ const UserScreen = ({ navigation }) => {
         setFavePic2Text(userData.mysecondfavorite_text || '');
         setFavePic2DisplayInFunStuff(userData.mysecondfavorite_displayInFunStuff || false);
         setFavePic2DisplayInUserGallery(userData.mysecondfavorite_displayInUserGallery || false);
-        setFavePic3(userData.mythirdfavorite || null);
-        setFavePic3Text(userData.mythirdfavorite_text || '');
-        console.log(`Fave picture 3 text: ${userData.mythirdfavorite_text}`);
-        setFavePic3DisplayInFunStuff(userData.favePic3_displayInFunStuff || false);
-        setFavePic3DisplayInUserGallery(userData.favePic3_displayInUserGallery || false);
+        setFavePic3(userData.myThirdFavorite || null);
+        setFavePic3Text(userData.myThirdFavorite_text || '');
+        setFavePic3DisplayInFunStuff(userData.myThirdFavorite_displayInFunStuff || false);
+        setFavePic3DisplayInUserGallery(userData.myThirdFavorite_displayInUserGallery || false);
       }
     });
 
@@ -244,7 +239,7 @@ const UserScreen = ({ navigation }) => {
         ? displayLocation === 'FunStuff'
           ? favePic2DisplayInFunStuff
           : favePic2DisplayInUserGallery
-        : fieldName === 'mythirdfavorite'
+        : fieldName === 'myThirdFavorite'
         ? displayLocation === 'FunStuff'
           ? favePic3DisplayInFunStuff
           : favePic3DisplayInUserGallery
@@ -270,7 +265,7 @@ const UserScreen = ({ navigation }) => {
       } else {
         setFavePic2DisplayInUserGallery(!currentValue);
       }
-    } else if (fieldName === 'mythirdfavorite') {
+    } else if (fieldName === 'myThirdFavorite') {
       if (displayLocation === 'FunStuff') {
         setFavePic3DisplayInFunStuff(!currentValue);
       } else {
@@ -333,7 +328,7 @@ const UserScreen = ({ navigation }) => {
           setFavePic2DisplayInFunStuff(false);
           setFavePic2DisplayInUserGallery(false);
           break;
-        case 'mythirdfavorite':
+        case 'myThirdFavorite':
           setFavePic3(null);
           setFavePic3Text('');
           setFavePic3DisplayInFunStuff(false);
@@ -342,153 +337,149 @@ const UserScreen = ({ navigation }) => {
         default:
           break;
       }
-      const handleAboutTextUpdate = async () => {
-        const db = getFirestore();
-        const userDocRef = doc(db, 'users', user.uid);
-        await setDoc(
-          userDocRef,
-          {
-            aboutText,
-            aboutDisplayInFunStuff,
-            aboutDisplayInUserGallery
-          },
-          { merge: true }
-        );
-      };
     }
   };
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
-        <LinearGradient colors={['#bee4ed', '#acc4d9']} style={{ padding: 0 }}>
-          <Appbar.Header style={{ backgroundColor: 'transparent' }}>
-            <Appbar.Content
-              title={`Welcome ${nickname || 'User'}`}
-              titleStyle={{
-                color: '#2E5090',
-                ...globalStyles.appbarTitle,
-              }}
-            />
-            <LogoutButton handleLogout={handleLogout} />
-          </Appbar.Header>
-        </LinearGradient>
-        <View style={{ flex: 1 }}>
-          <View style={globalStyles.swiperContainer}>
-            <Swiper
-              autoplay={true}
-              showsPagination={false}
-              showsButtons={true}
-              nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
-              prevButton={<Image source={leftfacing} style={{ width: 50, height: 50 }} />}
-              style={globalStyles.swiper}
-            >
-              {[
-                { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
-                { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
-                { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
-                { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
-              ].map((image, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={globalStyles.swiperItem}
-                  onPress={() => handleImagePress(image.uri, image.name)}
-                >
-                  <Text>{image.name}</Text>
-                  {image.uri ? (
-                    <Image source={{ uri: image.uri }} style={globalStyles.imageContainer} />
-                  ) : (
-                    <View style={globalStyles.noImageContainer}>
-                      <Text>No Image</Text>
-                    </View>
-                  )}
-                  <Text>{image?.text}</Text>
-                </TouchableOpacity>
-              ))}
-            </Swiper>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('MoodTracker')}
-                style={globalStyles.button}
-              >
-                <Text style={globalStyles.buttonText}>Go to Mood Tracker</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={handleModalClose}
+    <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
+      <LinearGradient colors={['#bee4ed', '#acc4d9']} style={{ padding: 0 }}> 
+        <Appbar.Header style={{ backgroundColor: 'transparent' }}>
+          <Appbar.Content
+        title={`Welcome ${nickname || 'User'}`}
+        titleStyle={{
+          color: '#2E5090',
+          ...globalStyles.appbarTitle,
+        }}
+      />
+      <LogoutButton handleLogout={handleLogout} />
+    </Appbar.Header>
+    </LinearGradient>
+    <View style={{ flex: 1}}>
+      <View style={globalStyles.swiperContainer}>
+      <Swiper
+  autoplay={true}
+  showsPagination={false}
+  showsButtons={true}
+  nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
+  prevButton={<Image source={leftfacing} style={{ width: 50, height: 50 }} />}
+  style={globalStyles.swiper}
 >
-  <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={globalStyles.centeredView}>
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={globalStyles.modalContainer}>
-        <Text style={globalStyles.modalText}>About You:</Text>
-        <TextInput
-          value={aboutText}
-          onChangeText={setAboutText}
-          placeholder="Gender...Pronouns...Hobbies...Anything you want to share!"
-          style={[globalStyles.modalTextInput, globalStyles.inputField]}
-        />
-        <View style={globalStyles.switchRow}>
-          <Text>Display About Text in Fun Stuff</Text>
-          <Switch value={aboutDisplayInFunStuff} onValueChange={setAboutDisplayInFunStuff} />
+  {[
+    { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
+    { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
+    { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
+    { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
+  ].map((image, index) => (
+    <TouchableOpacity
+      key={index}
+      style={globalStyles.swiperItem}
+      onPress={() => handleImagePress(image.uri, image.name)}
+    >
+      <Text style={globalStyles.swiperNickname}>{image.name}</Text>
+      {image.uri ? (
+        <Image source={{ uri: image.uri }} style={globalStyles.imageContainer} />
+      ) : (
+        <View style={globalStyles.noImageContainer}>
+          <Text>No Image</Text>
         </View>
-        <View style={globalStyles.switchRow}>
-          <Text>Display About Text in User Gallery</Text>
-          <Switch value={aboutDisplayInUserGallery} onValueChange={setAboutDisplayInUserGallery} />
+      )}
+      <Text style={globalStyles.swiperText}>{image?.text}</Text>
+    </TouchableOpacity>
+  ))}
+</Swiper>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MoodTracker')}
+            style={globalStyles.button}
+          >
+            <Text style={{ color: '#ffffff' }}>Go to Mood Tracker</Text>
+          </TouchableOpacity>
         </View>
-        <Text>What do you want to change about {selectedImage.name}?</Text>
-        <TextInput
-          value={selectedImageText}
-          onChangeText={setSelectedImageText}
-          placeholder="Enter image text"
-          style={[globalStyles.modalTextInput, globalStyles.inputField]}
-        />
-        <View style={globalStyles.switchRow}>
-          <Text>Display in Fun Stuff:</Text>
-          <Switch value={selectedImageDisplayFunStuff} onValueChange={setSelectedImageDisplayFunStuff} />
-        </View>
-        <View style={globalStyles.switchRow}>
-          <Text>Display in User Gallery:</Text>
-          <Switch value={selectedImageDisplayUserGallery} onValueChange={setSelectedImageDisplayUserGallery} />
-        </View>
-        <TouchableOpacity
-          style={globalStyles.modalButton}
-          onPress={() => {
-            handleChooseImage(
-              selectedImage.name.split(' ').join('').toLowerCase(),
-              selectedImageDisplayFunStuff,
-              selectedImageDisplayUserGallery,
-              selectedImageText
-            );
-            handleImageTextUpdate(
-              selectedImage.name.split(' ').join('').toLowerCase(),
-              selectedImageText
-            );
-          }}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={handleModalClose}
         >
-          <Text style={{ color: '#FFFFFF' }}>Choose a new image.</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={globalStyles.modalButton}
-          onPress={() =>
-            handleDeleteImage(selectedImage.name.split(' ').join('').toLowerCase())
-          }
-        >
-          <Text style={{ color: '#FFFFFF' }}>Delete this image</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={globalStyles.modalButton} onPress={handleModalClose}>
-          <Text style={{ color: '#FFFFFF' }}>I'm done.</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  </KeyboardAvoidingView>
-</Modal>
-
+          <KeyboardAvoidingView
+            behavior="height"
+            style={globalStyles.centeredView}
+          >
+            <View style={[globalStyles.modalContainer, { backgroundColor: '#FFB7D5' }]}>
+              <Text>What do you want to change about {selectedImage.name}?</Text>
+              <TextInput
+                value={selectedImageText}
+                onChangeText={setSelectedImageText}
+                onEndEditing={() =>
+                  handleImageTextUpdate(
+                    selectedImage.name.split(' ').join('').toLowerCase(),
+                    selectedImageText
+                  )
+                }
+                placeholder="Enter image text"
+                style={globalStyles.textInput}
+              />
+              <View style={globalStyles.switchRow}>
+                <Text>Display in Fun Stuff:</Text>
+                <Switch
+                  value={selectedImageDisplayFunStuff}
+                  onValueChange={setSelectedImageDisplayFunStuff}
+                />
+              </View>
+              <View style={globalStyles.switchRow}>
+                <Text>Display in User Gallery:</Text>
+                <Switch
+                  value={selectedImageDisplayUserGallery}
+                  onValueChange={setSelectedImageDisplayUserGallery}
+                />
+              </View>
+              <TouchableOpacity
+                style={globalStyles.button}
+                onPress={() => {
+                  handleChooseImage(
+                    selectedImage.name
+                      .split(' ')
+                      .join('')
+                      .toLowerCase(),
+                    selectedImageDisplayFunStuff,
+                    selectedImageDisplayUserGallery,
+                    selectedImageText
+                  );
+                  handleImageTextUpdate(
+                    selectedImage.name
+                      .split(' ')
+                      .join('')
+                      .toLowerCase(),
+                    selectedImageText
+                  );
+                }}
+              >
+                <Text style={{ color: '#FFFFFF' }}>Choose a new image.</Text>
+</TouchableOpacity>
+<TouchableOpacity
+  style={globalStyles.button}
+  onPress={() =>
+    handleDeleteImage(
+      selectedImage.name.split(' ').join('').toLowerCase()
+    )
+  }
+>
+  <Text style={{ color: '#FFFFFF' }}>Delete this image</Text>
+</TouchableOpacity>
+<TouchableOpacity
+  style={globalStyles.button}
+  onPress={handleModalClose}
+>
+  <Text style={{ color: '#FFFFFF' }}>I'm done.</Text>
+</TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </Modal>
         </View>
-      </LinearGradient>
-    </SafeAreaView>
+  </LinearGradient>
+</SafeAreaView>
   );
 };
+
 export default UserScreen;

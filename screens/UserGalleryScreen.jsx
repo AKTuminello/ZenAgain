@@ -79,28 +79,43 @@ const UserGalleryScreen = () => {
   };
 
   const handleLikeImage = async (imageUrl) => {
-    const db = getFirestore();
-    const likesRef = doc(db, 'likes', 'Rese4L1rDINgjUEMLgQ5');
-    if (likes.includes(imageUrl)) {
-      await setDoc(likesRef, { likedImages: arrayRemove(imageUrl) }, { merge: true });
-      setLikes(prev => prev.filter(like => like !== imageUrl));
-    } else {
-      await setDoc(likesRef, { likedImages: arrayUnion(imageUrl) }, { merge: true });
-      setLikes(prev => [...prev, imageUrl]);
+    try {
+      const db = getFirestore();
+      const likesRef = doc(db, 'likes', 'Rese4L1rDINgjUEMLgQ5');
+      if (likes.includes(imageUrl)) {
+        await setDoc(likesRef, { likedImages: arrayRemove(imageUrl) }, { merge: true });
+        setLikes(prev => prev.filter(like => like !== imageUrl));
+        console.log('Image unliked successfully:', imageUrl);
+      } else {
+        await setDoc(likesRef, { likedImages: arrayUnion(imageUrl) }, { merge: true });
+        setLikes(prev => [...prev, imageUrl]);
+        console.log('Image liked successfully:', imageUrl);
+      }
+    } catch (error) {
+      console.error('An error occurred while liking/unliking the image:', error);
     }
   };
+  // A and E
 
   const addFriend = async (friend) => {
-    const friendExists = friends.some(f => f.nickname === friend.nickname);
-    if (friendExists) {
-      alert('You are already friends with this user.');
-      return;
+    try {
+      const friendExists = friends.some(f => f.nickname === friend.nickname);
+      if (friendExists) {
+        alert('You are already friends with this user.');
+        return;
+      }
+      const db = getFirestore();
+      const friendsRef = doc(db, 'friends', user.uid);
+      await setDoc(friendsRef, { friends: arrayUnion(friend) }, { merge: true });
+      setFriends([...friends, friend]);
+      console.log('Friend added successfully:', friend.nickname);
+    } catch (error) {
+      console.error('An error occurred while adding the friend:', error);
+      alert('An error occurred while adding the friend. Please try again.');
     }
-    const db = getFirestore();
-    const friendsRef = doc(db, 'friends', user.uid);
-    await setDoc(friendsRef, { friends: arrayUnion(friend) }, { merge: true });
-    setFriends([...friends, friend]);
   };
+  // A and E
+  
 
   const handleOpenModal = (image) => {
     setModalImage(image);
@@ -113,51 +128,73 @@ const UserGalleryScreen = () => {
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
-      <LinearGradient colors={['#bee4ed', '#acc4d9']} style={{ padding: 0 }}> 
-        <Appbar.Header style={{ backgroundColor: 'transparent' }}>
-          <Appbar.Content
-           title="Gallery"
-           titleStyle={{ 
-            color: '#2E5090',
-            fontSize: 30,
-            ...globalStyles.appbarTitle,
-          }}/>
-        </Appbar.Header>
+      <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
+        <LinearGradient colors={['#bee4ed', '#acc4d9']} style={{ padding: 0 }}>
+          <Appbar.Header style={{ backgroundColor: 'transparent' }}>
+            <Appbar.Content
+              accessible
+              accessibilityLabel="Gallery Header"
+              title="Gallery"
+              titleStyle={{
+                color: '#2E5090',
+                fontSize: 30,
+                ...globalStyles.appbarTitle,
+              }}
+            />
+          </Appbar.Header>
+        </LinearGradient>
+        {images.length > 0 ? (
+          <Swiper
+            autoplay={false}
+            showsPagination={false}
+            showsButtons={true}
+            nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
+            prevButton={<Image source={leftfacing} style={{ width: 50, height: 50 }} />}
+          >
+            {images.map((item, index) => (
+              <View key={index} accessible accessibilityLabel={`Image ${index + 1}`} style={globalStyles.swiperItem}>
+                <TouchableHighlight accessible accessibilityLabel={`Open image ${index + 1}`} onPress={() => handleOpenModal(item)}>
+                  <Image source={{ uri: item.url }} style={globalStyles.imageContainer} />
+                </TouchableHighlight>
+                {item.nickname && <Text style={globalStyles.nicknameText}>{item.nickname}</Text>}{item.text ? <Text style={globalStyles.imageText}>{item.text}</Text> : <Text style={globalStyles.imageText}>No text provided</Text>}
+
+                <TouchableOpacity
+                  accessible
+                  accessibilityLabel={likes.includes(item.url) ? "Unlike this image" : "Like this image"}
+                  style={globalStyles.button}
+                  onPress={() => handleLikeImage(item.url)}
+                >
+                  <Text style={globalStyles.buttonText}>{likes.includes(item.url) ? "Unlike" : "Like"}</Text>
+                </TouchableOpacity>
+                <Text style={globalStyles.buttonText}>Likes: {likes.filter((like) => like === item.url).length}</Text>
+                <TouchableOpacity
+                  accessible
+                  accessibilityLabel="Add Friend"
+                  style={globalStyles.button}
+                  onPress={() => addFriend({ nickname: item.nickname })}
+                >
+                  <Text style={globalStyles.buttonText}>Add Friend</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </Swiper>
+        ) : (
+          <View accessible accessibilityLabel="No images available">
+            <Text>No images available</Text>
+          </View>
+        )}
+        <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={handleCloseModal}>
+          <View style={globalStyles.centeredView}>
+            <TouchableHighlight accessible accessibilityLabel="Close image preview" onPress={handleCloseModal} style={globalStyles.modalTouchable}>
+              <Image source={{ uri: modalImage?.url }} style={globalStyles.modalImage} />
+            </TouchableHighlight>
+          </View>
+        </Modal>
       </LinearGradient>
-      <Swiper autoplay={false} showsPagination={false} showsButtons={true}
-      nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
-      prevButton={<Image source={leftfacing} style={{ width: 50, height: 50}} />}>
-      {images.map((item, index) => (
-  <View key={index} style={globalStyles.swiperItem}>
-    <TouchableHighlight onPress={() => handleOpenModal(item)}>
-      <Image source={{ uri: item.url }} style={globalStyles.imageContainer} />
-    </TouchableHighlight>
-    {item.nickname && <Text>{item.nickname}</Text>}
-    {item.text ? <Text>{item.text}</Text> : <Text>No text provided</Text>}
-    <TouchableOpacity style={globalStyles.button} onPress={() => handleLikeImage(item.url)}>
-      <Text style={globalStyles.buttonText}>{likes.includes(item.url) ? "Unlike" : "Like"}</Text>
-    </TouchableOpacity>
-    <Text style={globalStyles.buttonText}>Likes: {likes.filter(like => like === item.url).length}</Text>
-    <TouchableOpacity style={globalStyles.button} onPress={() => addFriend({ nickname: item.nickname })}>
-      <Text style={globalStyles.buttonText}>Add Friend</Text>
-    </TouchableOpacity>
-  </View>
-))}
-</Swiper>
-<Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={handleCloseModal}>
-  <View style={globalStyles.centeredView}>
-    <TouchableHighlight onPress={handleCloseModal} style={globalStyles.modalTouchable}>
-      <Image source={{ uri: modalImage?.url }} style={globalStyles.modalImage} />
-    </TouchableHighlight>
-  </View>
-</Modal>
-</LinearGradient>
-</SafeAreaView>
-
-
+    </SafeAreaView>
   );
 };
+export default UserGalleryScreen;  
 
-export default UserGalleryScreen;
-
+  
+  

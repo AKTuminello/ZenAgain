@@ -131,6 +131,22 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  imageText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'JosefinSans-SemiBoldItalic',
+    color: '#300040',
+    marginBottom: 10,
+  },
+
+  nicknameText: {
+    fontSize: 24,
+    fontWeight: 'normal',
+    fontFamily: 'JosefinSans-SemiBoldItalic',
+    color: '#008080',
+    marginBottom: 10,
+  },
+
   inputField: {
     backgroundColor: '#FFFFFF', 
     borderColor: '#300040', 
@@ -146,8 +162,16 @@ export const globalStyles = StyleSheet.create({
     padding: 10,
     margin: 10,
     alignItems: 'center'
-
   },
+
+  modalButton: {
+    backgroundColor: '#300040',
+    borderRadius: 10,
+    padding: 5,
+    margin: 5,
+    alignItems: 'center',
+  },
+  
 
   });
 
