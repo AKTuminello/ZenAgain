@@ -24,7 +24,6 @@ export const globalStyles = StyleSheet.create({
   swiperContainer: {
     height: '75%',
   },
-  
   swiperItem: {
     marginTop: 75,
     marginBottom: 70,
@@ -40,56 +39,38 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    height: '75%',
+    maxHeight: '75%',
     width: '90%',
     backgroundColor: '#FFB7D5',
     borderRadius: 20,
     padding: 20,
-    justifyContent: 'center',
     alignItems: 'center',
   },
-
-  modalText: {
-    fontSize: 24, 
-    color: '#300040',
-    marginBottom: 15, 
-    textAlign: 'center',
-  },
-  instructionsText: {
-    fontSize: 18, 
-    color: '#300040',
-    fontFamily: 'JosefinSans-Italic', 
-    fontStyle: 'italic',
-    textAlign: 'center', 
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-  },
-
   modalTextInput: {
     width: '80%',
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 10,
+    backgroundColor: '#FFFFFF',
   },
   switchRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '80%',
-    marginTop: 10,
+    marginTop: 5, 
+    marginBottom: 5,
   },
   button: {
     backgroundColor: '#300040',
     borderRadius: 10,
     padding: 10,
-    margin: 10,
+    margin: 5,
     fontFamily: 'JosefinSans-Regular',
     color: '#FFFFFF',
-  
+    width: '100%', 
+    alignItems: 'center',
   },
   centeredView: {
     flex: 1,
@@ -101,6 +82,7 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     fontSize: 24,
+    color: '#300040',
   },
   closeButton: {
     position: 'absolute',
@@ -150,7 +132,7 @@ export const globalStyles = StyleSheet.create({
   inputField: {
     backgroundColor: '#FFFFFF', 
     borderColor: '#300040', 
-    borderWidth: 1, 
+    borderWidth: 2, 
     borderRadius: 5, 
     paddingHorizontal: 10, 
     fontSize: 16,
@@ -163,6 +145,21 @@ export const globalStyles = StyleSheet.create({
     margin: 10,
     alignItems: 'center'
 
+  },
+  modalButton: {
+    backgroundColor: '#300040',
+    borderRadius: 10,
+    padding : 5, 
+    margin: 5,
+    alignItems: 'center',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '80%',
+    marginTop: 5, 
+    marginBottom: 5, 
   },
 
   });
