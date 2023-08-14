@@ -8,7 +8,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient colors={['#bee4ed', '#49176e']} style={globalStyles.container}>
-        <View style={globalStyles.titleContainer}>
+      <View style={[globalStyles.titleContainer, { paddingTop: 20 }]}> 
           <Text style={globalStyles.appbarTitle}>Catch Your Breath</Text>
         </View>
         <BlobBreathing />
