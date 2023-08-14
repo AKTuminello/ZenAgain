@@ -136,7 +136,6 @@ const FunStuffScreen = () => {
           <MusicPlayer fileUrl={selectedBlend?.audioUrl} isMusicOn={isMusicOn} setIsMusicOn={setIsMusicOn} />
         </Appbar.Header>
   
-        <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
   
         <View style={{ height: '55%' }}>
         <Swiper 
@@ -151,18 +150,20 @@ const FunStuffScreen = () => {
       key={index} 
       accessible
       accessibilityLabel={`Image of ${image.nickname}`}
-      style={{ marginTop: 75, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
+      style={{ marginTop: 40, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
       onPress={() => handleImagePress(image.url)}
     >
       <Text style={globalStyles.swiperText}>{image.nickname}</Text>
       <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} accessible accessibilityLabel={`Image of ${image.nickname}`} onError={(e) => console.log('Image loading error:', e)} />
-      <Text style={{ fontSize: 18, fontWeight: 'bold', color: colors.text }}>{image.text}</Text>
+      <Text style={globalStyles.swiperText}>{image.text}</Text>
     </TouchableOpacity>
   ))}
 </Swiper>
 <TouchableOpacity onPress={() => setInstructionsModalVisible(true)} style={globalStyles.button}>
   <Text style={globalStyles.buttonText}>Show Instructions</Text>
 </TouchableOpacity>
+
+<BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
 <Modal
   animationType="slide"

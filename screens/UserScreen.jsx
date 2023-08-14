@@ -147,10 +147,7 @@ const UserScreen = ({ navigation }) => {
         },
         { merge: true }
       );
-    }
-
   
-      
       switch (fieldName) {
         case 'profilePic':
           setmyprofilepic_text(selectedImageText);
@@ -168,8 +165,8 @@ const UserScreen = ({ navigation }) => {
           break;
       }
     }
-  
-  
+  };
+    
   const handleImageTextUpdate = async (fieldName, text) => {
     const db = getFirestore();
     const userDocRef = doc(db, 'users', user.uid);
@@ -212,15 +209,16 @@ const UserScreen = ({ navigation }) => {
         setFavePic2Text(userData.mysecondfavorite_text || '');
         setFavePic2DisplayInFunStuff(userData.mysecondfavorite_displayInFunStuff || false);
         setFavePic2DisplayInUserGallery(userData.mysecondfavorite_displayInUserGallery || false);
-        setFavePic3(userData.myThirdFavorite || null);
-        setFavePic3Text(userData.myThirdFavorite_text || '');
-        setFavePic3DisplayInFunStuff(userData.myThirdFavorite_displayInFunStuff || false);
-        setFavePic3DisplayInUserGallery(userData.myThirdFavorite_displayInUserGallery || false);
+        setFavePic3(userData.mythirdfavorite || null);
+        setFavePic3Text(userData.mythirdfavorite_text || '');
+        setFavePic3DisplayInFunStuff(userData.mythirdfavorite_displayInFunStuff || false);
+        setFavePic3DisplayInUserGallery(userData.mythirdfavorite_displayInUserGallery || false);
       }
     });
-
+  
     return () => unsub();
   };
+  
 
   const handleImageDisplayToggle = async (fieldName, displayLocation) => {
     const db = getFirestore();
@@ -235,7 +233,7 @@ const UserScreen = ({ navigation }) => {
         ? displayLocation === 'FunStuff'
           ? favePic1DisplayInFunStuff
           : favePic1DisplayInUserGallery
-        : fieldName === 'mysecondfavorite'
+        : fieldName === 'mySecondFavorite'
         ? displayLocation === 'FunStuff'
           ? favePic2DisplayInFunStuff
           : favePic2DisplayInUserGallery
@@ -259,7 +257,7 @@ const UserScreen = ({ navigation }) => {
       } else {
         setFavePic1DisplayInUserGallery(!currentValue);
       }
-    } else if (fieldName === 'mysecondfavorite') {
+    } else if (fieldName === 'mySecondFavorite') {
       if (displayLocation === 'FunStuff') {
         setFavePic2DisplayInFunStuff(!currentValue);
       } else {
@@ -322,7 +320,7 @@ const UserScreen = ({ navigation }) => {
           setFavePic1DisplayInFunStuff(false);
           setFavePic1DisplayInUserGallery(false);
           break;
-        case 'mysecondfavorite':
+        case 'mySecondFavorite':
           setFavePic2(null);
           setFavePic2Text('');
           setFavePic2DisplayInFunStuff(false);
@@ -358,37 +356,37 @@ const UserScreen = ({ navigation }) => {
     </LinearGradient>
     <View style={{ flex: 1}}>
       <View style={globalStyles.swiperContainer}>
-      <Swiper
-  autoplay={true}
-  showsPagination={false}
-  showsButtons={true}
-  nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
-  prevButton={<Image source={leftfacing} style={{ width: 50, height: 50 }} />}
-  style={globalStyles.swiper}
->
-  {[
-    { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
-    { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
-    { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
-    { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
-  ].map((image, index) => (
-    <TouchableOpacity
-      key={index}
-      style={globalStyles.swiperItem}
-      onPress={() => handleImagePress(image.uri, image.name)}
-    >
-      <Text style={globalStyles.swiperNickname}>{image.name}</Text>
-      {image.uri ? (
-        <Image source={{ uri: image.uri }} style={globalStyles.imageContainer} />
-      ) : (
-        <View style={globalStyles.noImageContainer}>
-          <Text>No Image</Text>
-        </View>
-      )}
-      <Text style={globalStyles.swiperText}>{image?.text}</Text>
-    </TouchableOpacity>
-  ))}
-</Swiper>
+        <Swiper
+          autoplay={true}
+          showsPagination={false}
+          showsButtons={true}
+          nextButton={<Image source={rightfacing} style={{ width: 50, height: 50 }} />}
+            prevButton={<Image source={leftfacing} style={{ width: 50, height: 50}} />}
+          style={globalStyles.swiper}
+        >
+        {[
+  { uri: profilePic, name: 'My Profile Pic', text: myprofilepic_text },
+  { uri: favePic1, name: 'My Favorite Image', text: favePic1Text },
+  { uri: favePic2, name: 'My Second Favorite', text: favePic2Text },
+  { uri: favePic3, name: 'My Third Favorite', text: favePic3Text },
+].map((image, index) => (
+  <TouchableOpacity
+    key={index}
+    style={globalStyles.swiperItem}
+    onPress={() => handleImagePress(image.uri, image.name)}
+  >
+    <Text style={globalStyles.swiperText}>{image.name}</Text> 
+    {image.uri ? (
+      <Image source={{ uri: image.uri }} style={globalStyles.imageContainer} />
+    ) : (
+      <View style={globalStyles.noImageContainer}>
+        <Text>No Image</Text>
+      </View>
+    )}
+    <Text>{image?.text}</Text> 
+  </TouchableOpacity>
+))}
+      </Swiper>
           <TouchableOpacity
             onPress={() => navigation.navigate('MoodTracker')}
             style={globalStyles.button}
