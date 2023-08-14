@@ -166,7 +166,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = useState(false);
-  const { user, setUser, setIsLoggedIn} = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
@@ -213,7 +213,7 @@ const App = () => {
 
   useEffect(() => {
     if (!loading && fontsLoaded) {
-      console.log("Splash screen hidden");
+  
       SplashScreen.hideAsync();
     }
   }, [loading, fontsLoaded]);
@@ -223,7 +223,7 @@ const App = () => {
   }
 
   if (!animationComplete) {
-    console.log("Showing JitteryBall");
+  
     return <JitteryBall onComplete={() => setAnimationComplete(true)} />;
   }
 
@@ -231,7 +231,7 @@ const App = () => {
     return <AgreementScreen onAgree={() => setAgreementAccepted(true)} />;
   }
 
-  console.log("Showing MainNavigator");
+  
   return (
     <MainNavigator/>
   );

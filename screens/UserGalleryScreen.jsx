@@ -34,22 +34,31 @@ const UserGalleryScreen = () => {
     const querySnapshot = await getDocs(collection(db, 'users'));
     const users = querySnapshot.docs.map(doc => doc.data());
     const images = [];
+    
+  
     users.forEach(user => {
-      if (user.profilePic_displayInUserGallery) {
-        images.push({ url: user.profilePic, text: user.myprofilePic_text || '', nickname: user.nickname });
+
+      
+      if (user.myprofilepic_displayInUserGallery) {
+        images.push({ url: user.myprofilepic, text: user.myprofilepic_text || '', nickname: user.nickname });
       }
-      if (user.favePic1_displayInUserGallery) {
-        images.push({ url: user.favePic1, text: user.myfavoriteimage_text || '', nickname: user.nickname });
+      if (user.myfavoriteimage_displayInUserGallery) {
+        images.push({ url: user.myfavoriteimage, text: user.myfavoriteimage_text || '', nickname: user.nickname });
       }
-      if (user.favePic2_displayInUserGallery) {
-        images.push({ url: user.favePic2, text: user.mysecondfavorite_text || '', nickname: user.nickname });
+      if (user.mysecondfavorite_displayInUserGallery) {
+        images.push({ url: user.mysecondfavorite, text: user.mysecondfavorite_text || '', nickname: user.nickname });
       }
-      if (user.favePic3_displayInUserGallery) {
-        images.push({ url: user.favePic3, text: user.mythirdfavorite_text || '', nickname: user.nickname });
+      if (user.mythirdfavorite_displayInUserGallery) {
+        images.push({ url: user.mythirdfavorite, text: user.mythirdfavorite_text || '', nickname: user.nickname });
       }
+      
     });
+  
+
+    
     setImages(images);
   };
+  
 
   const fetchFriendsFromFirestore = async () => {
     const db = getFirestore();

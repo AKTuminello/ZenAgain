@@ -76,7 +76,7 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 10,
   },
   modalText: {
     marginBottom: 15,
@@ -111,10 +111,12 @@ export const globalStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     color: themeColors.accent,
+    fontFamily: 'JosefinSans-SemiBoldItalic',
+    height: 50,
   },
 
   titleContainer: {
-    paddingTop: 25,
+    paddingTop: 0,
   },
 
   navbar: {
@@ -145,21 +147,6 @@ export const globalStyles = StyleSheet.create({
     margin: 10,
     alignItems: 'center'
 
-  },
-  modalButton: {
-    backgroundColor: '#300040',
-    borderRadius: 10,
-    padding : 5, 
-    margin: 5,
-    alignItems: 'center',
-  },
-  switchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '80%',
-    marginTop: 5, 
-    marginBottom: 5, 
   },
 
   });
