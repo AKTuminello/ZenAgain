@@ -137,7 +137,8 @@ const FunStuffScreen = () => {
         </Appbar.Header>
   
   
-        <View style={{ height: '55%' }}>
+        <View style={{ height: '90%', marginTop: 60}}>
+        <View style={{ height: '60%' }}>
         <Swiper 
   autoplay={false} 
   showsPagination={false} 
@@ -146,22 +147,25 @@ const FunStuffScreen = () => {
             prevButton={<Image source={leftfacing} style={{ width: 50, height: 50}} />}
 >
   {swiperImages.map((image, index) => (
-    <TouchableOpacity 
-      key={index} 
-      accessible
-      accessibilityLabel={`Image of ${image.nickname}`}
-      style={{ marginTop: 40, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
-      onPress={() => handleImagePress(image.url)}
-    >
-      <Text style={globalStyles.swiperText}>{image.nickname}</Text>
-      <Image source={{ uri: image.url }} style={{ width:200, height: 200 }} accessible accessibilityLabel={`Image of ${image.nickname}`} onError={(e) => console.log('Image loading error:', e)} />
-      <Text style={globalStyles.swiperText}>{image.text}</Text>
-    </TouchableOpacity>
+          <TouchableOpacity 
+          key={index} 
+          accessible
+          accessibilityLabel={`Image of ${image.nickname}`}
+          style={{ marginTop: 40, maxWidth: '100%', maxHeight: 200, justifyContent: 'center', alignItems: 'center' }} 
+          onPress={() => handleImagePress(image.url)}
+        >
+          <View style={{ padding: 20, alignItems: 'center' }}> 
+            <Text style={globalStyles.swiperText}>{image.nickname}</Text>
+            <Image source={{ uri: image.url }} style={{ width: 200, height: 200 }} accessible accessibilityLabel={`Image of ${image.nickname}`} onError={(e) => console.log('Image loading error:', e)} />
+            <Text style={globalStyles.swiperText}>{image.text}</Text>
+          </View>
+        </TouchableOpacity>
   ))}
 </Swiper>
 <TouchableOpacity onPress={() => setInstructionsModalVisible(true)} style={globalStyles.button}>
-  <Text style={globalStyles.buttonText}>Show Instructions</Text>
+  <Text style={marginTop=20, globalStyles.buttonText}>Show Instructions</Text>
 </TouchableOpacity>
+</View>
 
 <BlendMenu blends={blends} handleBlendSelection={handleBlendSelection} />
 
@@ -183,6 +187,7 @@ const FunStuffScreen = () => {
       <Text style={globalStyles.instructionsText}>Use only in safe situations.</Text>
     <FAB icon="close" onPress={() => setInstructionsModalVisible(false)} style={globalStyles.closeButton} />
   </View>
+
 </Modal>
       </View>  
         <Modal
